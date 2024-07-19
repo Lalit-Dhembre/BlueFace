@@ -14,7 +14,7 @@ import '../StudentSide/StudentHomepage.dart';
 class Services {
   final String url1 = "http://192.168.133.38:4000";
 
-  Future<void> loginStudent(BuildContext context, String email, String password) async {
+  Future<bool> loginStudent(BuildContext context, String email, String password) async {
     var url = Uri.parse(url1 + '/userss/loginstudent'); // Replace with your server URL
     try {
       var response = await http.post(
@@ -39,6 +39,7 @@ class Services {
               builder: (context) => StudentLoggedIn(student: student),
             ),
           );
+          return true;
         } else {
           Fluttertoast.showToast(
             msg: "Login failed. Please check your credentials.",
@@ -73,6 +74,7 @@ class Services {
         fontSize: 16.0,
       );
     }
+    return false;
   }
 
 
