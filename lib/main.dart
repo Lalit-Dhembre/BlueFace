@@ -1,3 +1,4 @@
+import 'package:BlueFace/Services/FaceAuth/FaceAuthentication/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'FacultySide/FacultyLoginPage.dart';
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Attendance Tracker',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF9A6BFF)),
+        colorScheme: ColorScheme.fromSeed(seedColor: accent),
         // Adjust other theme properties as needed
       ),
       home: const PersonaSelectionScreen(),
@@ -30,7 +31,7 @@ class PersonaSelectionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Set the background color to white
+      backgroundColor: background, // Set the background color to white
       body: Container(
         child: SafeArea(
           child: Column(
@@ -47,7 +48,7 @@ class PersonaSelectionScreen extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF9A6BFF), // Set the text color to purple
+                          color: accent, // Set the text color to purple
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -67,15 +68,21 @@ class PersonaSelectionScreen extends StatelessWidget {
 
   Widget _buildTopShape() {
     return Container(
-      height: 100,
+      height: 300,
       decoration: BoxDecoration(
-        color: const Color(0xFF9A6BFF).withOpacity(0.3), // Set the top shape color to purple with opacity
+        color: accentOver.withOpacity(1), // Set the top shape color to purple with opacity
         borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(100),
-          bottomRight: Radius.circular(100),
+          bottomLeft: Radius.circular(40),
+          bottomRight: Radius.circular(40),
         ),
       ),
-    );
+    child: Center(
+      child: Image.asset("assets/main_page.png",
+        width: 250, // Set the desired width
+        height: 250, // Set the desired height
+        fit: BoxFit.contain,
+      ),
+    ));
   }
 
   Widget _buildPersonaGrid(BuildContext context) {
@@ -114,7 +121,7 @@ class PersonaSelectionScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: const Color(0xFF9A6BFF), // Set the button color to purple
+              color: accent, // Set the button color to purple
               borderRadius: BorderRadius.circular(15),
             ),
             child: Icon(icon, size: 50, color: Colors.white), // Set the icon color to white
@@ -122,7 +129,7 @@ class PersonaSelectionScreen extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             title,
-            style: const TextStyle(color: Color(0xFF9A6BFF)), // Set the text color to purple
+            style: const TextStyle(color: accent), // Set the text color to purple
           ),
         ],
       ),
@@ -131,12 +138,12 @@ class PersonaSelectionScreen extends StatelessWidget {
 
   Widget _buildBottomShape() {
     return Container(
-      height: 100,
+      height: 150,
       decoration: BoxDecoration(
-        color: const Color(0xFF9A6BFF).withOpacity(0.3), // Set the bottom shape color to purple with opacity
+        color: accentOver.withOpacity(1), // Set the bottom shape color to purple with opacity
         borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(100),
-          topRight: Radius.circular(100),
+          topLeft: Radius.circular(40),
+          topRight: Radius.circular(40),
         ),
       ),
     );
