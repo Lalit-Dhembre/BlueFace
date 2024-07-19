@@ -1,4 +1,5 @@
 import 'package:BlueFace/Model.dart';
+import 'package:BlueFace/Services/FaceAuth/FaceAuthentication/themes.dart';
 import 'package:BlueFace/Services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -44,15 +45,11 @@ class _StudentLoggedInState extends State<StudentLoggedIn> {
           'Hello ${widget.student.name} !',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.purple.shade400,
+        backgroundColor: Color(0xFF9A6BFF),
       ),
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Colors.blue.shade200, Colors.purple.shade200],
-          ),
+         color: Color(0xFFFFFFFF)
         ),
         child: SafeArea(
           child: Center(
@@ -72,7 +69,7 @@ class _StudentLoggedInState extends State<StudentLoggedIn> {
                   child: Text('Register'),
                   style: ButtonStyle(
                     backgroundColor: WidgetStateProperty.all(
-                      hasScannedFace ? Colors.grey : Colors.purple.shade500,
+                      hasScannedFace ? Colors.grey : Color(0xFF9A6BFF),
                     ),
                     foregroundColor: WidgetStateProperty.all(Colors.white),
                     minimumSize: WidgetStateProperty.all(Size(200, 50)),
@@ -96,7 +93,7 @@ class _StudentLoggedInState extends State<StudentLoggedIn> {
                   child: Text('Give Attendance'),
                   style: ButtonStyle(
                     backgroundColor:
-                    WidgetStateProperty.all(Colors.purple.shade300),
+                    WidgetStateProperty.all(Color(0xFF9A6BFF)),
                     foregroundColor: WidgetStateProperty.all(Colors.white),
                     minimumSize: WidgetStateProperty.all(Size(200, 50)),
                     shape: WidgetStateProperty.all(
