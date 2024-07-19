@@ -156,15 +156,15 @@ class _FacultyLoggedInState extends State<FacultyLoggedIn> {
               child: Text(isAdvertising ? 'Stop Attendance' : 'Take Attendance'),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-
-                );
-              },
-              child: Text('Student List'),
-            ),
+            // ElevatedButton(
+            //   onPressed: () {
+            //     Navigator.push(
+            //       context,
+            //
+            //     );
+            //   },
+            //   child: Text('Student List'),
+            // ),
           ],
         ),
       ),
