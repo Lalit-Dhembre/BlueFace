@@ -1,5 +1,6 @@
 
 import 'package:BlueFace/Model.dart';
+import 'package:BlueFace/Services/FaceAuth/FaceAuthentication/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -39,6 +40,10 @@ class _FacultyLoggedInState extends State<FacultyLoggedIn> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
+        child: Container (
+          decoration: BoxDecoration(
+            color: background,
+          ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,6 +172,7 @@ class _FacultyLoggedInState extends State<FacultyLoggedIn> {
             // ),
           ],
         ),
+      ),
       ),
     );
   }

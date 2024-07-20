@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:BlueFace/Model.dart';
+import 'package:BlueFace/Services/FaceAuth/FaceAuthentication/themes.dart';
 import 'package:BlueFace/Services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:nearby_connections/nearby_connections.dart';
@@ -38,7 +39,7 @@ class _UserDetailsViewState extends State<UserDetailsView> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text("Student HomePage", style: TextStyle(color: Colors.white)),
-          backgroundColor: Colors.deepPurple,
+          backgroundColor: background,
           actions: [
             CircleAvatar(
               radius: 20,
@@ -106,7 +107,7 @@ class _UserDetailsViewState extends State<UserDetailsView> {
                         },
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
-                          backgroundColor: Colors.deepPurple,
+                          backgroundColor: accent,
                           minimumSize: const Size(100, 60),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(32.0),

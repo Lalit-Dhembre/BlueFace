@@ -8,18 +8,21 @@ import '../Services/FaceAuth/FaceAuthentication/auth.dart';
 import '../Services/FaceAuth/FaceAuthentication/size.dart';
 import '../Services/FaceAuth/FaceRegister/RegisterFaceView.dart';
 
-
+// Define a constant for the background color
+const Color background = Color(0xFFE6DCFF); // Replace with your desired color
 
 class StudentLoggedIn extends StatefulWidget {
   final StudentLogin student;
+
   const StudentLoggedIn({Key? key, required this.student}) : super(key: key);
+
   @override
   _StudentLoggedInState createState() => _StudentLoggedInState();
 }
 
 class _StudentLoggedInState extends State<StudentLoggedIn> {
-
   bool hasScannedFace = false;
+  String? selectedOption; // Variable to store the selected option
 
   @override
   void initState() {
@@ -43,13 +46,14 @@ class _StudentLoggedInState extends State<StudentLoggedIn> {
       appBar: AppBar(
         title: Text(
           'Hello ${widget.student.name} !',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white), // Ensure text is readable
         ),
-        backgroundColor: Color(0xFF9A6BFF),
+        backgroundColor: Colors.transparent, // Make AppBar transparent
+        elevation: 0, // Remove shadow
       ),
       body: Container(
         decoration: BoxDecoration(
-         color: Color(0xFFFFFFFF)
+          color: background, // Use the constant background color
         ),
         child: SafeArea(
           child: Center(
@@ -68,12 +72,12 @@ class _StudentLoggedInState extends State<StudentLoggedIn> {
                   },
                   child: Text('Register'),
                   style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.all(
+                    backgroundColor: MaterialStateProperty.all(
                       hasScannedFace ? Colors.grey : Color(0xFF9A6BFF),
                     ),
-                    foregroundColor: WidgetStateProperty.all(Colors.white),
-                    minimumSize: WidgetStateProperty.all(Size(200, 50)),
-                    shape: WidgetStateProperty.all(
+                    foregroundColor: MaterialStateProperty.all(Colors.white),
+                    minimumSize: MaterialStateProperty.all(Size(200, 50)),
+                    shape: MaterialStateProperty.all(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -92,16 +96,39 @@ class _StudentLoggedInState extends State<StudentLoggedIn> {
                   },
                   child: Text('Give Attendance'),
                   style: ButtonStyle(
-                    backgroundColor:
-                    WidgetStateProperty.all(Color(0xFF9A6BFF)),
-                    foregroundColor: WidgetStateProperty.all(Colors.white),
-                    minimumSize: WidgetStateProperty.all(Size(200, 50)),
-                    shape: WidgetStateProperty.all(
+                    backgroundColor: MaterialStateProperty.all(Color(0xFF9A6BFF)),
+                    foregroundColor: MaterialStateProperty.all(Colors.white),
+                    minimumSize: MaterialStateProperty.all(Size(200, 50)),
+                    shape: MaterialStateProperty.all(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
                   ),
+                ),
+                SizedBox(height: 16),
+                DropdownButton<String>(
+                  value: selectedOption,
+                  hint: Text('Select an option'),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedOption = value;
+                    });
+                  },
+                  items: [
+                    DropdownMenuItem(
+                      value: 'option1',
+                      child: Text('Option 1'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'option2',
+                      child: Text('Option 2'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'option3',
+                      child: Text('Option 3'),
+                    ),
+                  ],
                 ),
               ],
             ),
