@@ -106,19 +106,24 @@ router.post('/loginstudent', async (req, res) => {
 router.post('/takeAttendance', async (req, res) => {
   const { division, semester, branch, PRN, Subject_id, Batch } = req.body;
 
-  const queryFetchSemId = 'SELECT SEM_ID FROM sem_info WHERE SEMESTER = ? AND BRANCH = ? AND DIVISION = ? AND SUB_ID = ? AND BATCH = ?';
-  const insertAttendance = 'INSERT INTO tempattendance (SEM_ID, PRN) VALUES (?, ?)';
-  console.log(req.body);
+  const queryFetchSemId = "SELECT SEM_ID FROM sem_info WHERE SEMESTER = ? AND BRANCH = ? AND DIVISION = ? AND SUB_ID = ? AND (BATCH = ? OR BATCH = 'ALL')";
+  const insertAttendance = 'INSERT INTO tempattendance (SEM_ID, PRN, BATCH, SEMESTER, BRANCH, DIVISION) VALUES (?, ?, ?, ?, ?, ?)';
+
+  console.log('Request Body:', req.body);
+
   try {
     // Fetch SEM_ID from sem_info table
-    const [rows] = await db.queryAsync(queryFetchSemId, [semester, branch, division, Subject_id, Batch]);
-    console.log([rows]);
+    const rows = await db.queryAsync(queryFetchSemId, [semester, branch, division, Subject_id, Batch]);
+
+    console.log('Query Result:', rows); // Log the raw query result
+
     // Check if rows is defined and contains results
-    if (rows && rows.length > 0) {
+    if (rows.length > 0) {
       const sem_id = rows[0].SEM_ID;
-      console.log(sem_id);
+      console.log('SEM_ID:', sem_id,);
+
       // Insert SEM_ID and PRN into tempattendance table
-      await db.queryAsync(insertAttendance, [sem_id, PRN]);
+      await db.queryAsync(insertAttendance, [sem_id, PRN, Batch, semester, branch, division]);
 
       res.status(200).send('Attendance recorded successfully');
     } else {
@@ -129,6 +134,8 @@ router.post('/takeAttendance', async (req, res) => {
     res.status(500).send('Failed to record attendance');
   }
 });
+
+
 
 
 
@@ -180,55 +187,76 @@ await db.queryAsync(updateQuery, [student.status, student.PRN]);
 });
 
 // Route to get students based on semester and branch
-router.get('/students', async (req, res) => {
+router.get('/studentlist', async (req, res) => {
+  const { semester, branch, division, batch } = req.query;
+
+  // Define the SQL queries
+  const queryFetchSemId = `
+    SELECT SEM_ID 
+    FROM sem_info 
+    WHERE SEMESTER = ? 
+      AND BRANCH = ? 
+      AND DIVISION = ? 
+      AND BATCH = ?
+  `;
+
+  const queryFetchPrns = `
+    SELECT PRN 
+    FROM tempattendance 
+    WHERE SEM_ID = ?
+  `;
+
+  const queryFetchStudentInfo = `
+    SELECT PRN, Name 
+    FROM student_info 
+    WHERE PRN IN (?)
+  `;
+
   try {
-    const results = await db.queryAsync('SELECT * FROM student');
-    if (results.length > 0) {
-      res.status(200).json({ success: true, data: results });
+    // Fetch SEM_ID from sem_info table
+    const [semIdRows] = await db.queryAsync(queryFetchSemId, [semester, branch, division, batch]);
+
+    if (semIdRows.length > 0) {
+      const semId = semIdRows[0].SEM_ID;
+
+      // Fetch PRNs from tempattendance table
+      const [prnRows] = await db.queryAsync(queryFetchPrns, [semId]);
+
+      if (prnRows.length > 0) {
+        // Extract PRNs
+        const prns = prnRows.map(row => row.PRN);
+
+        // Fetch student details from student_info table
+        const [studentInfoRows] = await db.queryAsync(queryFetchStudentInfo, [prns]);
+
+        // Process student data to include isPresent field
+        const studentList = studentInfoRows.map(student => {
+          return {
+            PRN: student.PRN,
+            Name: student.Name,
+            isPresent: prns.includes(student.PRN) // Check if PRN is in tempattendance
+          };
+        });
+
+        res.status(200).json({
+          success: true,
+          students: studentList,
+        });
+      } else {
+        res.status(404).json({
+          success: false,
+          message: 'No PRNs found for the given SEM_ID',
+        });
+      }
     } else {
-      res.status(200).json({ success: false, message: 'No students found' });
+      res.status(404).json({
+        success: false,
+        message: 'No SEM_ID found for the given parameters',
+      });
     }
   } catch (error) {
-    console.error('ERROR FETCHING FROM DATABASE:', error);
-    res.status(500).send('ERROR FETCHING FROM DATABASE');
+    console.error('Error fetching student list:', error);
+    res.status(500).send('Error fetching student list');
   }
 });
-
-router.get('/getSubjects', async(req,res) => {
-  try {
-    const {faculty_id} = req.body;
-    const results = await db.queryAsync(`SELECT SUB_ID FROM  sem_info WHERE faculty_id = ?`,[faculty_id])
-    if (results.length > 0) {
-      res.status(200).json({ success: true, data: results });
-    }
-    else {
-      res.status(200).json({ success: false, message: 'No subjects found' });
-    }
-  } catch(error){
-    console.error('ERROR FETCHING FROM DATABASE:', error);
-    res.status(500).send('ERROR FETCHING FROM DATABASE');
-  }
-})
-
-// Route to get connected students (attendance data)
-router.get("/connectattendance", async (req, res) => {
-  try {
-    const results = await db.queryAsync('SELECT * FROM attendance');
-    if (results.length > 0) {
-      res.status(200).json({
-        'status_code': 200,
-        'connect_students': results,
-      });
-    } else {
-      res.status(200).json({
-        'status_code': 200,
-        'connect_students': [],
-      });
-    }
-  } catch (error) {
-    console.error('Error fetching data from database:', error);
-    res.status(500).send('Error fetching data from database');
-  }
-});
-
 module.exports = router;

@@ -178,7 +178,7 @@ class Points {
 class StudentList {
   final String semester;
   final String branch;
-  // final String batch;
+  final String batch;
   final String subject;
   final String division;
   final String? name;
@@ -188,7 +188,7 @@ class StudentList {
   StudentList({
     required this.semester,
     required this.branch,
-    // required this.batch,
+    required this.batch,
     required this.subject,
     required this.division,
     this.name,
@@ -201,12 +201,12 @@ class ConnectedStudent {
   final String? studentName;
   final String? semester1;
   final String? branch;
-  // final String? batch;
+  final String? batch;
   final String? division;
   final String? PRN;
   final DateTime? datetime;
   ConnectedStudent({
-    // this.batch,
+    this.batch,
     this.division,
     this.studentName, this.semester1, this.branch, this.PRN, this.datetime});
 }

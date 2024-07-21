@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:BlueFace/Model.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -163,31 +162,25 @@ class Services {
   }
 
   Future<void> fetchStudents(List<StudentLogin> studentsList) async {
-    studentsList.clear();
-
     try {
-      final res = await http.get(Uri.parse(url1+"/userss/students"));
+      final res = await http.get(Uri.parse('$url1/userss/students'));
       if (res.statusCode == 200) {
         var data = jsonDecode(res.body);
-        if (data['success'] == true) {
-          List<dynamic> studentData = data['data'];
-          studentData.forEach((value) {
-            studentsList.add(
-              StudentLogin(
-                  name: value['Name'],
-                  PRN: value['PRN'],
-                  Semester: value['SEMESTER'],
-                  Branch: value['BRANCH'],
-                  Division: value['DIVISION'],
-                  Batch: value['BATCH'],
-                  Subjects: value['SUB_ID'],
-                  isPresent: false
-              ),
-            );
-          });
-          // setState(() {});
+        if (data['success']) {
+          studentsList.clear();
+          for (var student in data['data']) {
+            studentsList.add(StudentLogin(
+              name: student['Name'],
+              PRN: student['PRN'],
+              Semester: student['SEMESTER'],
+              Branch: student['BRANCH'],
+              Division: student['DIVISION'],
+              Batch: student['BATCH'],
+              Subjects: [],
+            ));
+          }
         } else {
-          throw Exception('Failed to fetch students data');
+          throw Exception('No students found');
         }
       } else {
         throw Exception('Failed to load students data, status code: ${res.statusCode}');
@@ -198,30 +191,60 @@ class Services {
     }
   }
 
-  Future<void> commitAttendance(List<StudentList> studentslist,String branch, String semester, String subject,String localDateTime) async {
+  Future<void> fetchConnectedStudents(List<ConnectedStudent> connectedStudents) async {
+    connectedStudents.clear();
+    try {
+      final res = await http.get(Uri.parse('$url1/userss/connectattendance'));
+      if (res.statusCode == 200) {
+        var data = jsonDecode(res.body);
+        if (data['status_code'] == 200) {
+          List<dynamic> connectedData = data['connect_students'];
+          connectedData.forEach((value) {
+            connectedStudents.add(ConnectedStudent(
+              studentName: value['Name'],
+              semester1: value['SEMESTER'],
+              branch: value['BRANCH'],
+              division: value['DIVISION'],
+              batch: value['BATCH'],
+              PRN: value['PRN'],
+              datetime: DateTime.parse(value['date']),
+            ));
+          });
+        } else {
+          throw Exception('Failed to fetch connected students data');
+        }
+      } else {
+        throw Exception('Failed to load connected students data, status code: ${res.statusCode}');
+      }
+    } catch (e) {
+      debugPrint('Error fetching connected students data: $e');
+      throw Exception('Failed to fetch connected students data');
+    }
+  }
+
+  Future<void> commitAttendance(List<StudentLogin> studentsList, String branch, String semester, String subject, String localDateTime) async {
     String tableName = '${branch}_${semester}_${subject}';
-    List<Map<String, dynamic>> attendanceData = studentslist.map((student) {
+    List<Map<String, dynamic>> attendanceData = studentsList.map((student) {
       return {
-        'PRN': student.prn,
+        'PRN': student.PRN,
         'status': student.isPresent ? 'Present' : 'Absent',
       };
     }).toList();
 
     try {
       final res = await http.post(
-        Uri.parse(url1+"/userss/attendance/commit"),
+        Uri.parse('$url1/userss/attendance/commit'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'tableName': tableName,
-          'localDateTime': localDateTime
-          // 'attendanceData': attendanceData,
+          'localDateTime': localDateTime,
+          'attendanceData': attendanceData,
         }),
       );
 
       if (res.statusCode == 200) {
         var data = jsonDecode(res.body);
-        if (data['success'] == true) {
-        } else {
+        if (!data['success']) {
           throw Exception('Failed to commit attendance data');
         }
       } else {
@@ -229,58 +252,7 @@ class Services {
       }
     } catch (e) {
       debugPrint('Error committing attendance data: $e');
-    }
-  }
-  Future<void> fetchConnectedStudents(List<ConnectedStudent> connectedStudents) async {
-    connectedStudents.clear();
-
-    try {
-      final res = await http.get(Uri.parse(url1+"/userss/connectattendance"));
-      if (res.statusCode == 200) {
-        var data = jsonDecode(res.body);
-        if (data['status_code'] == 200) {
-          List<dynamic> connectedData = data['connect_students'];
-          connectedData.forEach((value) {
-            connectedStudents.add(
-              ConnectedStudent(
-                studentName: value['studentName'],
-                semester1: value['semester'],
-                branch: value['branch'],
-                PRN: value['PRN'],
-                datetime: DateTime.parse(value['date']),
-              ),
-            );
-          });
-        } else {
-          throw Exception('Failed to fetch connected students data');
-        }
-      } else {
-        throw Exception('Failed to load connected students data, status code: ${res.statusCode}');
-      }
-    } catch (e) {
-      debugPrint('Error fetching connected students data: $e');
-      throw Exception('Failed to fetch connected students data');
-    }
-  }
-  Future<void> getSubjects(FacultyLogin faculty) async {
-    try {
-      final res = await http.get(Uri.parse(url1+"/userss/getSubjects"));
-      if (res.statusCode == 200) {
-        var data = jsonDecode(res.body);
-        if (data['status_code'] == 200) {
-          List<dynamic> connectedData = data['connect_students'];
-          connectedData.forEach((value) {
-            faculty.Subjects.add(value);
-          });
-        } else {
-          throw Exception('Failed to fetch connected students data');
-        }
-      } else {
-        throw Exception('Failed to load connected students data, status code: ${res.statusCode}');
-      }
-    } catch (e) {
-      debugPrint('Error fetching connected students data: $e');
-      throw Exception('Failed to fetch connected students data');
+      throw Exception('Failed to commit attendance data');
     }
   }
 }
