@@ -20,8 +20,9 @@ import 'CustomButton.dart';
 import 'animatedView.dart';
 
 class AuthenticateFaceView extends StatefulWidget {
+  final String subject_id;
   final StudentLogin student;
-  const AuthenticateFaceView({Key? key, required this.student}) : super(key: key);
+  const AuthenticateFaceView({super.key, required this.student, required this.subject_id});
 
   @override
   State<AuthenticateFaceView> createState() => _AuthenticateFaceViewState();
@@ -62,16 +63,14 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
     super.dispose();
   }
 
-  get _playScanningAudio =>
-      _audioPlayer
-        ..setReleaseMode(ReleaseMode.loop)
-        ..play(AssetSource("scan_beep.wav"));
+  get _playScanningAudio => _audioPlayer
+    ..setReleaseMode(ReleaseMode.loop)
+    ..play(AssetSource("scan_beep.wav"));
 
-  get _playFailedAudio =>
-      _audioPlayer
-        ..stop()
-        ..setReleaseMode(ReleaseMode.release)
-        ..play(AssetSource("failed.mp3"));
+  get _playFailedAudio => _audioPlayer
+    ..stop()
+    ..setReleaseMode(ReleaseMode.release)
+    ..play(AssetSource("failed.mp3"));
 
   @override
   Widget build(BuildContext context) {
@@ -114,8 +113,7 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
                       Container(
                         height: 0.82.sh,
                         width: double.infinity,
-                        padding: EdgeInsets.fromLTRB(
-                            0.05.sw, 0.025.sh, 0.05.sw, 0),
+                        padding: EdgeInsets.fromLTRB(0.05.sw, 0.025.sh, 0.05.sw, 0),
                         decoration: BoxDecoration(
                           color: overlayContainerClr,
                           borderRadius: BorderRadius.only(
@@ -133,8 +131,7 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
                                   },
                                   onInputImage: (inputImage) async {
                                     setState(() => isMatching = true);
-                                    _faceFeatures = await extractFaceFeatures(
-                                        inputImage, _faceDetector);
+                                    _faceFeatures = await extractFaceFeatures(inputImage, _faceDetector);
                                     setState(() => isMatching = false);
                                   },
                                 ),
@@ -203,23 +200,19 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
 
     double ratioMouth = distMouth1 / distMouth2;
 
-    double distNoseToMouth1 = euclideanDistance(
-        face1.noseBase!, face1.bottomMouth!);
-    double distNoseToMouth2 = euclideanDistance(
-        face2.noseBase!, face2.bottomMouth!);
+    double distNoseToMouth1 = euclideanDistance(face1.noseBase!, face1.bottomMouth!);
+    double distNoseToMouth2 = euclideanDistance(face2.noseBase!, face2.bottomMouth!);
 
     double ratioNoseToMouth = distNoseToMouth1 / distNoseToMouth2;
 
-    double ratio = (ratioEye + ratioEar + ratioCheek + ratioMouth +
-        ratioNoseToMouth) / 5;
+    double ratio = (ratioEye + ratioEar + ratioCheek + ratioMouth + ratioNoseToMouth) / 5;
     log(ratio.toString(), name: "Ratio");
 
     return ratio;
   }
 
   double euclideanDistance(Points p1, Points p2) {
-    final sqr = math.sqrt(
-        math.pow((p1.x! - p2.x!), 2) + math.pow((p1.y! - p2.y!), 2));
+    final sqr = math.sqrt(math.pow((p1.x! - p2.x!), 2) + math.pow((p1.y! - p2.y!), 2));
     return sqr;
   }
 
@@ -271,8 +264,7 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
         0.75,
       );
 
-      var split = regula.MatchFacesSimilarityThresholdSplit.fromJson(
-          json.decode(str));
+      var split = regula.MatchFacesSimilarityThresholdSplit.fromJson(json.decode(str));
       setState(() {
         _similarity = split!.matchedFaces.isNotEmpty
             ? (split.matchedFaces[0]!.similarity! * 100).toStringAsFixed(2)
@@ -301,10 +293,9 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
         if (mounted) {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) =>
-                  UserDetailsView(
-                    student: widget.student,
-                  ),
+              builder: (context) => UserDetailsView(
+                student: widget.student, Subject_id: widget.subject_id,
+              ),
             ),
           );
         }
@@ -354,9 +345,7 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
               actions: [
                 TextButton(
                   onPressed: () {
-                    if (_nameController.text
-                        .trim()
-                        .isEmpty) {
+                    if (_nameController.text.trim().isEmpty) {
                       CustomSnackBar.errorSnackBar("Enter a name to proceed");
                     } else {
                       Navigator.of(context).pop();
@@ -412,8 +401,7 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
     }
   }
 
-  void _showFailureDialog(
-      {required String title, required String description}) {
+  void _showFailureDialog({required String title, required String description}) {
     showDialog(
       context: context,
       builder: (context) {

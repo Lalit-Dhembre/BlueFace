@@ -1,4 +1,3 @@
-
 import 'package:BlueFace/Model.dart';
 import 'package:BlueFace/Services/FaceAuth/FaceAuthentication/themes.dart';
 import 'package:flutter/material.dart';
@@ -6,9 +5,10 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:nearby_connections/nearby_connections.dart';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 import '../Services/services.dart';
-
 
 class FacultyLoggedIn extends StatefulWidget {
   final FacultyLogin faculty;
@@ -20,7 +20,7 @@ class FacultyLoggedIn extends StatefulWidget {
 }
 
 class _FacultyLoggedInState extends State<FacultyLoggedIn> {
-  var service = new Services();
+  var service = Services();
   String? selectedSemester;
   String? selectedBranch;
   String? selectedSubject;
@@ -32,152 +32,158 @@ class _FacultyLoggedInState extends State<FacultyLoggedIn> {
   bool isAdvertising = false;
 
   TextEditingController dateController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Hello ${widget.faculty.Faculty_name} !!'),
+        title: Text('Hello ${widget.faculty.Faculty_id} !!'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Container (
+        child: Container(
           decoration: BoxDecoration(
             color: background,
           ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            DropdownButtonFormField<String>(
-              value: selectedBranch,
-              onChanged: (newValue) {
-                setState(() {
-                  selectedBranch = newValue;
-                });
-              },
-              items: <String>['ECS','EXTC','CE','IT','AIDS','AIML','IOT','MECHANICAL']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              decoration: const InputDecoration(labelText: 'Branch'),
-            ),
-            DropdownButtonFormField<String>(
-              value: selectedSemester,
-              onChanged: (newValue) {
-                setState(() {
-                  selectedSemester = newValue;
-                });
-              },
-              items: <String>['1','2','3','4','5','6']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              decoration: const InputDecoration(labelText: 'Semester'),
-            ),
-            DropdownButtonFormField<String>(
-              value: selectedDivision,
-              onChanged: (newValue) {
-                setState(() {
-                  selectedDivision = newValue;
-                });
-              },
-              items: <String>['A','B','C','D','E','F','G','H']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              decoration: const InputDecoration(labelText: 'Divison'),
-            ),
-            DropdownButtonFormField<String>(
-              value: selectedBatch,
-              onChanged: (newValue) {
-                setState(() {
-                  selectedBatch = newValue;
-                });
-              },
-              items: <String>['1','2','3','ALL']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              decoration: const InputDecoration(labelText: 'Batch'),
-            ),
-
-            DropdownButtonFormField<String>(
-              value: selectedSubject,
-              onChanged: (newValue) {
-                setState(() {
-                  selectedSubject = newValue;
-                });
-              },
-              items: widget.faculty.Subjects
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              decoration: const InputDecoration(labelText: 'Subject'),
-            ),
-            TextField(
-              controller: dateController,
-              decoration: const InputDecoration(
-                labelText: 'Date',
-                hintText: 'Enter date',
-                prefixIcon: Icon(Icons.calendar_today),
-              ),
-              onTap: () async {
-                FocusScope.of(context).requestFocus(FocusNode());
-                DateTime? picked = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(2020),
-                  lastDate: DateTime(2025),
-                );
-                if (picked != null) {
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              DropdownButtonFormField<String>(
+                value: selectedBranch,
+                onChanged: (newValue) {
                   setState(() {
-                    selectedDate = picked;
-                    dateController.text = DateFormat('yyyy-MM-dd').format(picked);
+                    selectedBranch = newValue;
                   });
-                }
-              },
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: isAdvertising ? stopAdvertising : startAdvertising,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: isAdvertising ? Colors.red : Colors.blue,
+                },
+                items: <String>[
+                  'ECS',
+                  'EXTC',
+                  'CE',
+                  'IT',
+                  'AIDS',
+                  'AIML',
+                  'IOT',
+                  'MECHANICAL'
+                ].map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                decoration: const InputDecoration(labelText: 'Branch'),
               ),
-              child: Text(isAdvertising ? 'Stop Attendance' : 'Take Attendance'),
-            ),
-            const SizedBox(height: 20),
-            // ElevatedButton(
-            //   onPressed: () {
-            //     Navigator.push(
-            //       context,
-            //
-            //     );
-            //   },
-            //   child: Text('Student List'),
-            // ),
-          ],
+              DropdownButtonFormField<String>(
+                value: selectedSemester,
+                onChanged: (newValue) {
+                  setState(() {
+                    selectedSemester = newValue;
+                  });
+                },
+                items: <String>['1', '2', '3', '4', '5', '6']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                decoration: const InputDecoration(labelText: 'Semester'),
+              ),
+              DropdownButtonFormField<String>(
+                value: selectedDivision,
+                onChanged: (newValue) {
+                  setState(() {
+                    selectedDivision = newValue;
+                  });
+                },
+                items: <String>['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                decoration: const InputDecoration(labelText: 'Division'),
+              ),
+              DropdownButtonFormField<String>(
+                value: selectedBatch,
+                onChanged: (newValue) {
+                  setState(() {
+                    selectedBatch = newValue;
+                  });
+                },
+                items: <String>['1', '2', '3', 'ALL']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                decoration: const InputDecoration(labelText: 'Batch'),
+              ),
+              DropdownButtonFormField<String>(
+                value: selectedSubject,
+                onChanged: (newValue) {
+                  setState(() {
+                    selectedSubject = newValue;
+                  });
+                },
+                items: widget.faculty.Subjects
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                decoration: const InputDecoration(labelText: 'Subject'),
+              ),
+              TextField(
+                controller: dateController,
+                decoration: const InputDecoration(
+                  labelText: 'Date',
+                  hintText: 'Enter date',
+                  prefixIcon: Icon(Icons.calendar_today),
+                ),
+                onTap: () async {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                  DateTime? picked = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2020),
+                    lastDate: DateTime(2025),
+                  );
+                  if (picked != null) {
+                    setState(() {
+                      selectedDate = picked;
+                      dateController.text =
+                          DateFormat('yyyy-MM-dd').format(picked);
+                    });
+                  }
+                },
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: isAdvertising ? stopAdvertising : startAdvertising,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: isAdvertising ? Colors.red : Colors.blue,
+                ),
+                child: Text(isAdvertising ? 'Stop Attendance' : 'Take Attendance'),
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
-      ),
       ),
     );
   }
 
   Future<void> startAdvertising() async {
+    if (kIsWeb || !(Platform.isAndroid || Platform.isIOS)) {
+      showSnackbar("Nearby Connections is not supported on this platform.");
+      resetState();
+      return;
+    }
+
     setState(() {
       isTakeAttendancePressed = true;
     });
@@ -258,7 +264,6 @@ class _FacultyLoggedInState extends State<FacultyLoggedIn> {
     }
   }
 
-
   void onConnectionInit(String id, ConnectionInfo info) {
     Nearby().acceptConnection(id, onPayLoadRecieved: (endid, payload) {
       if (payload.bytes != null) {
@@ -286,3 +291,52 @@ class _FacultyLoggedInState extends State<FacultyLoggedIn> {
     super.dispose();
   }
 }
+
+class FacultyLoggedInWeb extends StatelessWidget {
+  final FacultyLogin faculty;
+
+  const FacultyLoggedInWeb({Key? key, required this.faculty}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Hello ${faculty.Faculty_id} !!'),
+      ),
+      body: Center(
+        child: Text('Nearby Connections not supported on web'),
+      ),
+    );
+  }
+}
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'BlueFace Attendance',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: HomePage(),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  final FacultyLogin faculty = FacultyLogin(Faculty_id: '123', Subjects: ['Math', 'Science']);
+
+  @override
+  Widget build(BuildContext context) {
+    if (kIsWeb) {
+      return FacultyLoggedInWeb(faculty: faculty);
+    } else {
+      return FacultyLoggedIn(faculty: faculty);
+    }
+  }
+}
+

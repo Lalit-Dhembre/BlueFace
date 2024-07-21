@@ -78,7 +78,7 @@ class Services {
   }
 
 
-  Future<void> loginFaculty(BuildContext context, String email, String password) async {
+  Future<bool> loginFaculty(BuildContext context, String email, String password) async {
     var url = Uri.parse(url1 + '/userss/login');
     try {
       var response = await http.post(
@@ -106,6 +106,7 @@ class Services {
             context,
             MaterialPageRoute(builder: (context) => FacultyLoggedIn(faculty: faculty)),
           );
+          return true;
         } else {
           _showToast("Login failed. Please check your credentials.");
         }
@@ -116,6 +117,7 @@ class Services {
       print('Error during login: $e');
       _showToast("An error occurred. Please try again.");
     }
+    return false;
   }
 
   void _showToast(String message) {
@@ -177,7 +179,8 @@ class Services {
                   Branch: value['BRANCH'],
                   Division: value['DIVISION'],
                   Batch: value['BATCH'],
-                  // isPresent: false
+                  Subjects: value['SUB_ID'],
+                  isPresent: false
               ),
             );
           });

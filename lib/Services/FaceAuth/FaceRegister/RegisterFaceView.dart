@@ -44,20 +44,15 @@ class _RegisterFaceViewState extends State<RegisterFaceView> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: appBarColor,
-        title: const Text("Register User"),
+        backgroundColor: background,
+        title: const Text("Register User",
+            style: TextStyle(color: accent)) ,
         elevation: 0,
+        iconTheme: const IconThemeData(color: accent),
       ),
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              scaffoldTopGradientClr,
-              scaffoldBottomGradientClr,
-            ],
-          ),
+            color: background,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -67,7 +62,7 @@ class _RegisterFaceViewState extends State<RegisterFaceView> {
               width: double.infinity,
               padding: EdgeInsets.fromLTRB(0.05.sw, 0.025.sh, 0.05.sw, 0.04.sh),
               decoration: BoxDecoration(
-                color: overlayContainerClr,
+                color: accentOver,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(0.03.sh),
                   topRight: Radius.circular(0.03.sh),

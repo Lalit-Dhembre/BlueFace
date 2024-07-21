@@ -26,7 +26,6 @@ class _CameraViewState extends State<CameraView> {
   @override
   void initState() {
     super.initState();
-
     _imagePicker = ImagePicker();
   }
 
@@ -46,14 +45,21 @@ class _CameraViewState extends State<CameraView> {
         ),
         SizedBox(height: 0.025.sh),
         _image != null
-            ? CircleAvatar(
-          radius: 0.15.sh,
-          backgroundColor: const Color(0xffD9D9D9),
-          backgroundImage: FileImage(_image!),
+            ? Container(
+          width: 0.3.sh, // Set width for square
+          height: 0.3.sh, // Set height for square
+          decoration: BoxDecoration(
+            color: const Color(0xffD9D9D9),
+            image: DecorationImage(
+              image: FileImage(_image!),
+              fit: BoxFit.cover,
+            ),
+          ),
         )
-            : CircleAvatar(
-          radius: 0.15.sh,
-          backgroundColor: const Color(0xffD9D9D9),
+            : Container(
+          width: 0.3.sh, // Set width for square
+          height: 0.3.sh, // Set height for square
+          color: const Color(0xffD9D9D9),
           child: Icon(
             Icons.camera_alt,
             size: 0.09.sh,

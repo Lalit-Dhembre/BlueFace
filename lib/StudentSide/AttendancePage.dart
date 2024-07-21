@@ -14,8 +14,9 @@ import 'dart:convert';
 
 class UserDetailsView extends StatefulWidget {
   var service = new Services();
+  final String Subject_id;
   final StudentLogin student;
-  UserDetailsView({super.key, required this.student});
+  UserDetailsView({super.key, required this.student, required this.Subject_id});
 
   @override
   State<UserDetailsView> createState() => _UserDetailsViewState();

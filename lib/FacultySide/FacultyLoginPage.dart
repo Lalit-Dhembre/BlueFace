@@ -63,7 +63,7 @@ class _FacultyLoginPageState extends State<FacultyLoginPage> {
         fontSize: 16.0,
       );
     } else {
-      service.loginStudent(context, _email.text, _password.text).then((success) {
+      service.loginFaculty(context, _email.text, _password.text).then((success) {
         if (success) {
           _saveLoginData(_email.text, _password.text); // Save login data
           setState(() {
