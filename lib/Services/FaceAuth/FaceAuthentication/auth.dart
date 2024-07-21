@@ -222,7 +222,7 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
     users.clear();
 
     for (var key in keys) {
-      final userJson = prefs.getString(key);
+      final userJson = prefs.getString('face_scanned');
       if (userJson != null) {
         UserModel user = UserModel.fromJson(jsonDecode(userJson));
         double similarity = compareFaces(_faceFeatures!, user.faceFeatures!);
@@ -247,6 +247,7 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
       );
     }
   }
+
 
   Future<void> _matchFaces() async {
     bool faceMatched = false;
