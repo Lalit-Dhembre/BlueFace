@@ -84,7 +84,6 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
-          // Ensure constraints is not null before accessing max dimensions
           double maxWidth = ScreenSizeUtil.screenWidth;
           double maxHeight = ScreenSizeUtil.screenHeight;
 
@@ -106,7 +105,7 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
               ),
               Align(
                 alignment: Alignment.bottomCenter,
-                child: SingleChildScrollView(
+                child: SingleChildScrollView( // Wrap the Column in SingleChildScrollView
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
