@@ -137,12 +137,12 @@ class _StudentLoggedInState extends State<StudentLoggedIn> {
                   ),
                   SizedBox(height: 45), // Increase the gap between buttons and dropdown
                   // Check if the subjects list is empty
-                  if (widget.student.Subjects.isEmpty)
-                    Text(
-                      'Select the subject',
-                      style: TextStyle(color: Colors.red), // Style for the message
-                    )
-                  else
+                  // if (widget.student.Subjects.isEmpty)
+                  //   Text(
+                  //     'Select the subject',
+                  //     style: TextStyle(color: Colors.red), // Style for the message
+                  //   )
+                  // else
                   // Wrap the DropdownButtonFormField with a SizedBox to match button width
                     SizedBox(
                       width: 200, // Set the width to match the buttons

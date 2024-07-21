@@ -132,7 +132,7 @@ class Services {
     );
   }
 
-  Future<void> markAttendance(StudentLogin student) async {
+  Future<void> markAttendance(StudentLogin student, String semester_id) async {
     String url = url1+'/userss/takeAttendance'; // Replace with your server URL
     try {
       final response = await http.post(
@@ -145,7 +145,8 @@ class Services {
           'semester': student.Semester,
           'branch': student.Branch,
           'PRN': student.PRN,
-          'date': DateTime.now().toString(),
+          'Batch': student.Batch,
+          'Subject_id': semester_id
         }),
       );
 
