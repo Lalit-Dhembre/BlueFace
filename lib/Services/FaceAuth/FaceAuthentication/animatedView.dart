@@ -58,7 +58,7 @@ class _AnimatedViewState extends State<AnimatedView>
 }
 
 class HorizontalLinePainter extends CustomPainter {
-  double linePosition = 0.66.sw;
+  final double linePosition;
 
   HorizontalLinePainter({required this.linePosition});
 
@@ -70,7 +70,7 @@ class HorizontalLinePainter extends CustomPainter {
       ..strokeWidth = 4.0; // Width of the line
 
     // Fixed length of the line
-    double lineLength = size.width * 1; // 50% of the width
+    double lineLength = size.width * 1; // 100% of the width
     // Calculate the vertical position of the line
     double y = size.height * linePosition; // Animate up and down
 

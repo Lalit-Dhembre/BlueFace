@@ -24,14 +24,16 @@ class CustomTextField extends StatelessWidget {
       child: TextFormField(
           key: formFieldKey,
           controller: controller,
-          cursorColor: primaryBlack.withOpacity(0.8),
+          cursorColor: accent,
           style: const TextStyle(
-            color: primaryBlack,
+            color: Colors.white,
             fontWeight: FontWeight.w500,
             letterSpacing: 0.6,
           ),
           decoration: InputDecoration(
             hintText: hintText,
+            hintStyle: TextStyle(
+            color: Colors.white,)
           ),
           validator: (val) {
             if (val == null || val.trim().isEmpty) {

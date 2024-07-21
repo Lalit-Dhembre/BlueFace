@@ -79,7 +79,9 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: appBarColor,
-        title: const Text("Authenticate Face"),
+        title: const Text("Authenticate Face",style: TextStyle(fontSize: 20.0),),
+        titleTextStyle: const TextStyle(color: accent),
+        iconTheme: const IconThemeData(color: accent),
         elevation: 0,
       ),
       body: LayoutBuilder(
@@ -93,16 +95,10 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
                 width: maxWidth,
                 height: maxHeight,
                 decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      scaffoldTopGradientClr,
-                      scaffoldBottomGradientClr,
-                    ],
+                    color: background,
                   ),
                 ),
-              ),
+
               Align(
                 alignment: Alignment.bottomCenter,
                 child: SingleChildScrollView( // Wrap the Column in SingleChildScrollView
@@ -114,7 +110,7 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
                         width: double.infinity,
                         padding: EdgeInsets.fromLTRB(0.05.sw, 0.025.sh, 0.05.sw, 0),
                         decoration: BoxDecoration(
-                          color: overlayContainerClr,
+                          color: accentOver,
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(0.03.sh),
                             topRight: Radius.circular(0.03.sh),

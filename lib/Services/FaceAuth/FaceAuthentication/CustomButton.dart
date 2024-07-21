@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:BlueFace/Services/FaceAuth/FaceAuthentication/size.dart';
+import 'package:BlueFace/Services/FaceAuth/FaceAuthentication/themes.dart';
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
@@ -20,8 +21,9 @@ class CustomButton extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 0.05.sw),
         decoration: BoxDecoration(
-          color: Colors.red,
+          color: accent,
           borderRadius: BorderRadius.circular(0.02.sh),
+
         ),
         child: Padding(
           padding: EdgeInsets.all(0.03.sw),
@@ -33,7 +35,7 @@ class CustomButton extends StatelessWidget {
                 child: Text(
                   text,
                   style: TextStyle(
-                    color: Colors.black,
+                    color: Colors.white,
                     fontSize: 0.025.sh,
                     fontWeight: FontWeight.w500,
                   ),
@@ -41,10 +43,11 @@ class CustomButton extends StatelessWidget {
               ),
               CircleAvatar(
                 radius: 0.03.sh,
-                backgroundColor: Colors.red,
+                backgroundColor: accent,
                 child: const Icon(
                   Icons.arrow_circle_right,
-                  color: Colors.red,
+                  color: Colors.white,
+                  size: 40.0,
                 ),
               )
             ],

@@ -50,7 +50,7 @@ class _UserDetailsViewState extends State<UserDetailsView> {
                   await Nearby().stopDiscovery();
                   Get.offNamed('/login');
                 },
-                child: const Icon(Icons.logout_sharp, color: Colors.deepPurple),
+                child: const Icon(Icons.logout_sharp, color: accent),
               ),
             )
           ],
@@ -71,7 +71,7 @@ class _UserDetailsViewState extends State<UserDetailsView> {
                           padding: const EdgeInsets.all(20),
                           margin: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color: Colors.deepPurple,
+                            color: accent,
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.white.withOpacity(0.5),
