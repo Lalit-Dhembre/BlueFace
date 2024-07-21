@@ -4,9 +4,16 @@ import '../Services/services.dart';
 import '../Services/FaceAuth/FaceAuthentication/snackbar.dart';
 
 class StudentList extends StatefulWidget {
+  final String? semester;
+  final String? division;
+  final String? batch;
+  final String? branch;
+
+  const StudentList({super.key, this.semester, this.division, this.batch, this.branch});
   @override
   StudentListState createState() => StudentListState();
 }
+
 class StudentListState extends State<StudentList> {
   List<StudentLogin> studentsList = [];
   List<ConnectedStudent> connectedStudents = [];
