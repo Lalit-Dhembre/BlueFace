@@ -1,3 +1,4 @@
+import 'package:BlueFace/FacultySide/StudentList.dart' as stud;
 import 'package:BlueFace/Model.dart';
 import 'package:BlueFace/Services/FaceAuth/FaceAuthentication/themes.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +45,7 @@ class _FacultyLoggedInState extends State<FacultyLoggedIn> {
       body: Padding(
         padding: const EdgeInsets.all(0),
         child: Container(
-          padding: const EdgeInsets.fromLTRB(30,80,30,30),
+          padding: const EdgeInsets.fromLTRB(30,50,30,40),
           decoration: const BoxDecoration(
             color: background, // Set container color to background
           ),
@@ -238,7 +239,12 @@ class _FacultyLoggedInState extends State<FacultyLoggedIn> {
                   backgroundColor: accent, // Set the background color of the Student List button
                   minimumSize: const Size(200, 50), // Set minimum width and height
                 ),
-                onPressed: () {  },
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) =>stud.StudentList()),
+                  );
+                },
                 child: const Text(
                   'Student List',
                   style: TextStyle(color: Colors.white), // Set text color to white

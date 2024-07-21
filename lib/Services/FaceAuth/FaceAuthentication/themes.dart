@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 const Color buttonColor = Color(0xFF9A6BFF);
-const Color scaffoldTopGradientClr = Color(0xff8D8AD3);
+const Color scaffoldTopGradientClr = Color(0xff48426d);
 const Color scaffoldBottomGradientClr = Color(0xff454362);
 const Color appBarColor = Colors.transparent;
 const Color accentColor = Color(0xff55BD94);
