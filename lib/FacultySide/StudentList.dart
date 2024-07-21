@@ -1,20 +1,27 @@
-import 'dart:convert';
-
-import 'package:BlueFace/Services/FaceAuth/FaceAuthentication/snackbar.dart';
-import 'package:BlueFace/Services/services.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import '../Model.dart';
+import '../Services/services.dart';
+import '../Services/FaceAuth/FaceAuthentication/snackbar.dart';
 
-class _StudentListState{
-  static List<StudentLogin> studentsList = [];
-  static List<ConnectedStudent> connectedStudents = [];
-  var service = new Services();
+class StudentList extends StatefulWidget {
+  @override
+  StudentListState createState() => StudentListState();
+}
+class StudentListState extends State<StudentList> {
+  List<StudentLogin> studentsList = [];
+  List<ConnectedStudent> connectedStudents = [];
+  var service = Services();
 
   @override
   void initState() {
-    service.fetchStudents(studentsList);
-    service.fetchConnectedStudents(connectedStudents);
+    super.initState();
+    fetchInitialData();
+  }
+
+  void fetchInitialData() async {
+    await service.fetchStudents(studentsList);
+    await service.fetchConnectedStudents(connectedStudents);
+    setState(() {});
   }
 
   void _showStatusDialog(StudentLogin student) {
@@ -37,8 +44,8 @@ class _StudentListState{
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                        student.isPresent = true;
-                        updateStudentStatus(student);
+                      student.isPresent = true;
+                      updateStudentStatus(student);
                       Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(
@@ -48,8 +55,8 @@ class _StudentListState{
                   ),
                   ElevatedButton(
                     onPressed: () {
-                        student.isPresent = false;
-                        updateStudentStatus(student);
+                      student.isPresent = false;
+                      updateStudentStatus(student);
                       Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(
@@ -67,11 +74,9 @@ class _StudentListState{
   }
 
   void updateStudentStatus(StudentLogin student) {
-    // Check if the student exists in the connectedStudents list
     final index = connectedStudents.indexWhere((connectedStudent) => connectedStudent.PRN == student.PRN);
 
     if (student.isPresent && index == -1) {
-      // Add student to connectedStudents if they are marked present and not in the list
       connectedStudents.add(ConnectedStudent(
         studentName: student.name,
         semester1: student.Semester,
@@ -80,13 +85,11 @@ class _StudentListState{
         datetime: DateTime.now(),
       ));
     } else if (!student.isPresent && index != -1) {
-      // Remove student from connectedStudents if they are marked absent and in the list
       connectedStudents.removeAt(index);
     }
 
-    // Call setState to rebuild the UI
+    setState(() {});
   }
-
 
   Future<void> _showCommitDialog() async {
     DateTime now = DateTime.now();
@@ -104,7 +107,8 @@ class _StudentListState{
               Text("Are you sure you want to commit attendance?"),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
+                  await service.commitAttendance(studentsList, 'branch', 'semester', 'subject', formattedDateTime);
                   Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
@@ -127,8 +131,6 @@ class _StudentListState{
       },
     );
   }
-
-
 
   @override
   Widget build(BuildContext context) {
