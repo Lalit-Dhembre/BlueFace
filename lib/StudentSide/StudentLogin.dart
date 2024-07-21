@@ -105,6 +105,7 @@ class _StudentLoginPageState extends State<StudentLoginPage> {
           child: Center(
             child: Padding(
               padding: const EdgeInsets.all(14.0),
+              child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -189,6 +190,7 @@ class _StudentLoginPageState extends State<StudentLoginPage> {
                     ),
                   ),
 
+
                   SizedBox(height: 24),
                   if (_isLoggedIn) // Show welcome message if logged in
                     Text(
@@ -205,6 +207,8 @@ class _StudentLoginPageState extends State<StudentLoginPage> {
           ),
         ),
       ),
+      ),
     );
+
   }
 }

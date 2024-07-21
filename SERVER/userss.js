@@ -22,6 +22,7 @@ router.post('/register', async (req, res) => {
   const { faculty_name, email, password, subjects } = req.body;
 
   const sqlQuery = "INSERT INTO Faculty(faculty_name, email, password, subjects) VALUES (?, ?, ?, ?)";
+  
 
   try {
     await db.queryAsync(sqlQuery, [faculty_name, email, password, subjects]);
@@ -72,11 +73,24 @@ router.post('/login', async (req, res) => {
 router.post('/loginstudent', async (req, res) => {
   const { email, password } = req.body;
   const sql = "SELECT * FROM student_info WHERE EMAIL = ? AND PASSWORD = ?";
+  const subjectsSql = "SELECT SUB_ID FROM sem_info WHERE SEMESTER = ? AND BRANCH = ? AND DIVISION = ? AND (BATCH = ? OR BATCH = 'ALL')";
 
   try {
     const data = await db.queryAsync(sql, [email, password]);
     if (data.length > 0) {
-      res.status(200).json({ success: true, message: 'Login successful', data: data[0] });
+      const student = data[0];
+      console.log('Student Data:', student);
+
+      const subjectsQueryParams = [student.SEMESTER, student.BRANCH, student.DIVISION, student.BATCH];
+      console.log('Subjects Query Parameters:', subjectsQueryParams);
+
+      const subjectsData = await db.queryAsync(subjectsSql, subjectsQueryParams);
+      console.log('Subjects Data:', subjectsData);
+
+      const subjects = subjectsData.map(row => row.SUB_ID);
+      student.subjects_taught = subjects.join(',');
+      console.log('Student Object:', student);
+      res.status(200).json({ success: true, message: 'Login successful', data: student });
     } else {
       res.status(401).json({ success: false, message: 'Invalid email or password' });
     }
@@ -85,6 +99,8 @@ router.post('/loginstudent', async (req, res) => {
     res.status(500).json({ success: false, message: 'Login failed' });
   }
 });
+
+
 
 // Route to handle attendance recording
 router.post('/takeAttendance', async (req, res) => {

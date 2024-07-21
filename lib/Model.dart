@@ -6,6 +6,8 @@ class StudentLogin {
   final String Division;
   final String Batch;
   bool isPresent;
+  List<String> Subjects;
+
 
   StudentLogin({
     required this.name,
@@ -15,6 +17,7 @@ class StudentLogin {
     required this.Division,
     required this.Batch,
     this.isPresent = false,
+    required this.Subjects
   });
 
   factory StudentLogin.fromJson(Map<String, dynamic> json) {
@@ -27,6 +30,10 @@ class StudentLogin {
     String Branch = json['BRANCH'] ?? '';
     String Division = json['DIVISION'] ?? '';
     String Batch = json['BATCH'] ?? '';
+    String subjectString = json['subjects_taught'] ?? '';
+    List<String> Subjects = subjectString.isNotEmpty
+        ? subjectString.split(',').map((e) => e.trim()).toList()
+        : [];
 
     return StudentLogin(
       name: name,
@@ -35,30 +42,29 @@ class StudentLogin {
       Division: Division,
       Batch: Batch,
       Semester: Semester,
+      Subjects: Subjects
     );
   }
 }
 
 
 class FacultyLogin {
-  final int Faculty_id;
-  final String Faculty_name;
+  final String Faculty_id;
   List<String> Subjects;
 
-  FacultyLogin({required this.Faculty_id, required this.Faculty_name, required this.Subjects});
+  FacultyLogin({required this.Faculty_id, required this.Subjects});
 
   factory FacultyLogin.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
       throw ArgumentError('Cannot create Faculty from null JSON');
     }
-    int Faculty_id = json['Faculty_id'] ?? 0;
-    String Faculty_name = json['Faculty_name'] ?? '';
+    String Faculty_id = json['FACULTY_ID'] ?? 0;
     String subjectString = json['subjects_taught'] ?? '';
     List<String> subjects = subjectString.isNotEmpty
         ? subjectString.split(',').map((e) => e.trim()).toList()
         : [];
 
-    return FacultyLogin(Faculty_id: Faculty_id, Faculty_name: Faculty_name, Subjects: subjects);
+    return FacultyLogin(Faculty_id: Faculty_id, Subjects: subjects);
   }
 }
 

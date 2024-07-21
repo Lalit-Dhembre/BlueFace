@@ -22,7 +22,7 @@ class StudentLoggedIn extends StatefulWidget {
 
 class _StudentLoggedInState extends State<StudentLoggedIn> {
   bool hasScannedFace = false;
-  String? selectedOption; // Variable to store the selected option
+  String? selectedSubject; // Variable to store the selected option
 
   @override
   void initState() {
@@ -89,7 +89,7 @@ class _StudentLoggedInState extends State<StudentLoggedIn> {
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => AuthenticateFaceView(student: widget.student),
+                        builder: (context) => AuthenticateFaceView(student: widget.student, subject_id: selectedSubject.toString(),),
                       ),
                     );
                     // Add give attendance functionality here
@@ -107,28 +107,21 @@ class _StudentLoggedInState extends State<StudentLoggedIn> {
                   ),
                 ),
                 SizedBox(height: 16),
-                DropdownButton<String>(
-                  value: selectedOption,
-                  hint: Text('Select an option'),
-                  onChanged: (value) {
+                DropdownButtonFormField<String>(
+                  value: selectedSubject,
+                  onChanged: (newValue) {
                     setState(() {
-                      selectedOption = value;
+                      selectedSubject = newValue!;
                     });
                   },
-                  items: [
-                    DropdownMenuItem(
-                      value: 'option1',
-                      child: Text('Option 1'),
-                    ),
-                    DropdownMenuItem(
-                      value: 'option2',
-                      child: Text('Option 2'),
-                    ),
-                    DropdownMenuItem(
-                      value: 'option3',
-                      child: Text('Option 3'),
-                    ),
-                  ],
+                  items: widget.student.Subjects
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  decoration: const InputDecoration(labelText: 'Subject'),
                 ),
               ],
             ),

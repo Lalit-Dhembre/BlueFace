@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:BlueFace/Model.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -12,7 +11,7 @@ import '../StudentSide/StudentHomepage.dart';
 
 
 class Services {
-  final String url1 = "http://192.168.133.38:4000";
+  final String url1 = "http://192.168.1.9:4000";
 
   Future<bool> loginStudent(BuildContext context, String email, String password) async {
     var url = Uri.parse(url1 + '/userss/loginstudent'); // Replace with your server URL
@@ -78,7 +77,7 @@ class Services {
   }
 
 
-  Future<void> loginFaculty(BuildContext context, String email, String password) async {
+  Future<bool> loginFaculty(BuildContext context, String email, String password) async {
     var url = Uri.parse(url1 + '/userss/login');
     try {
       var response = await http.post(
@@ -109,6 +108,7 @@ class Services {
         } else {
           _showToast("Login failed. Please check your credentials.");
         }
+        return true;
       } else {
         _showToast("Login failed. Please check your credentials.");
       }
@@ -116,6 +116,7 @@ class Services {
       print('Error during login: $e');
       _showToast("An error occurred. Please try again.");
     }
+    return false;
   }
 
   void _showToast(String message) {
@@ -177,7 +178,8 @@ class Services {
                   Branch: value['BRANCH'],
                   Division: value['DIVISION'],
                   Batch: value['BATCH'],
-                  // isPresent: false
+                  Subjects: value['SUB_ID'],
+                  isPresent: false
               ),
             );
           });
