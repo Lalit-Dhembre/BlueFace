@@ -33,147 +33,222 @@ class _FacultyLoggedInState extends State<FacultyLoggedIn> {
 
   TextEditingController dateController = TextEditingController();
 
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Hello ${widget.faculty.Faculty_id} !!'),
+        titleTextStyle: const TextStyle(color: accent),
+        backgroundColor: accentOver,
+        iconTheme: const IconThemeData(color: accent),// Change AppBar color to accentOver
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(0),
         child: Container(
-          decoration: BoxDecoration(
-            color: background,
+          padding: const EdgeInsets.fromLTRB(30,80,30,30),
+          decoration: const BoxDecoration(
+            color: background, // Set container color to background
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              DropdownButtonFormField<String>(
-                value: selectedBranch,
-                onChanged: (newValue) {
-                  setState(() {
-                    selectedBranch = newValue;
-                  });
-                },
-                items: <String>[
-                  'ECS',
-                  'EXTC',
-                  'CE',
-                  'IT',
-                  'AIDS',
-                  'AIML',
-                  'IOT',
-                  'MECHANICAL'
-                ].map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                decoration: const InputDecoration(labelText: 'Branch'),
-              ),
-              DropdownButtonFormField<String>(
-                value: selectedSemester,
-                onChanged: (newValue) {
-                  setState(() {
-                    selectedSemester = newValue;
-                  });
-                },
-                items: <String>['1', '2', '3', '4', '5', '6']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                decoration: const InputDecoration(labelText: 'Semester'),
-              ),
-              DropdownButtonFormField<String>(
-                value: selectedDivision,
-                onChanged: (newValue) {
-                  setState(() {
-                    selectedDivision = newValue;
-                  });
-                },
-                items: <String>['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                decoration: const InputDecoration(labelText: 'Division'),
-              ),
-              DropdownButtonFormField<String>(
-                value: selectedBatch,
-                onChanged: (newValue) {
-                  setState(() {
-                    selectedBatch = newValue;
-                  });
-                },
-                items: <String>['1', '2', '3', 'ALL']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                decoration: const InputDecoration(labelText: 'Batch'),
-              ),
-              DropdownButtonFormField<String>(
-                value: selectedSubject,
-                onChanged: (newValue) {
-                  setState(() {
-                    selectedSubject = newValue;
-                  });
-                },
-                items: widget.faculty.Subjects
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                decoration: const InputDecoration(labelText: 'Subject'),
-              ),
-              TextField(
-                controller: dateController,
-                decoration: const InputDecoration(
-                  labelText: 'Date',
-                  hintText: 'Enter date',
-                  prefixIcon: Icon(Icons.calendar_today),
+              // Wrap Dropdowns in a Container with yellow background
+              Container(
+                decoration: BoxDecoration(
+                  color: accentOver, // Set background color to yellow
+                  borderRadius: BorderRadius.circular(8.0), // Optional: rounded corners
+                  border: Border.all(color: Colors.black), // Optional: border color
                 ),
-                onTap: () async {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                  DateTime? picked = await showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime(2020),
-                    lastDate: DateTime(2025),
-                  );
-                  if (picked != null) {
-                    setState(() {
-                      selectedDate = picked;
-                      dateController.text =
-                          DateFormat('yyyy-MM-dd').format(picked);
-                    });
-                  }
-                },
+                padding: const EdgeInsets.all(30), // Padding inside the container
+                child: Column(
+
+                  children: [
+                    DropdownButtonFormField<String>(
+                      padding: EdgeInsets.fromLTRB(0,0,0,30),
+
+                      value: selectedBranch,
+
+                      onChanged: (newValue) {
+                        setState(() {
+                          selectedBranch = newValue;
+                        });
+                      },
+                      items: <String>[
+                        'ECS',
+                        'EXTC',
+                        'CE',
+                        'IT',
+                        'AIDS',
+                        'AIML',
+                        'IOT',
+                        'MECHANICAL'
+                      ].map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value,
+                          style: const TextStyle(color: Colors.white),),
+
+                        );
+                      }).toList(),
+                      decoration: const InputDecoration(labelText: 'Branch', labelStyle: TextStyle(color: Colors.white)),
+                      dropdownColor: background,
+
+                    ),
+                    DropdownButtonFormField<String>(
+                      padding: EdgeInsets.fromLTRB(0,0,0,30),
+                      value: selectedSemester,
+                      onChanged: (newValue) {
+                        setState(() {
+                          selectedSemester = newValue;
+                        });
+                      },
+                      items: <String>['1', '2', '3', '4', '5', '6']
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value,
+                              style: const TextStyle(color: Colors.white),),
+                        );
+                      }).toList(),
+                      decoration: const InputDecoration(labelText: 'Semester',labelStyle: TextStyle(color: Colors.white)),
+                      dropdownColor: background,
+                    ),
+                    DropdownButtonFormField<String>(
+                      padding: EdgeInsets.fromLTRB(0,0,0,30),
+                      value: selectedDivision,
+                      onChanged: (newValue) {
+                        setState(() {
+                          selectedDivision = newValue;
+                        });
+                      },
+                      items: <String>['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value,
+                            style: const TextStyle(color: Colors.white),),
+                        );
+                      }).toList(),
+                      decoration: const InputDecoration(labelText: 'Division',labelStyle: TextStyle(color: Colors.white)),
+                      dropdownColor: background,
+                    ),
+                    DropdownButtonFormField<String>(
+                      padding: EdgeInsets.fromLTRB(0,0,0,30),
+                      value: selectedBatch,
+                      onChanged: (newValue) {
+                        setState(() {
+                          selectedBatch = newValue;
+                        });
+                      },
+                      items: <String>['1', '2', '3', 'ALL']
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value,
+                            style: const TextStyle(color: Colors.white),),
+                        );
+                      }).toList(),
+                      decoration: const InputDecoration(labelText: 'Batch',labelStyle: TextStyle(color: Colors.white)),
+                      dropdownColor: background,
+                    ),
+                    DropdownButtonFormField<String>(
+                      padding: EdgeInsets.fromLTRB(0,0,0,30),
+                      value: selectedSubject,
+                      onChanged: (newValue) {
+                        setState(() {
+                          selectedSubject = newValue;
+                        });
+                      },
+                      items: widget.faculty.Subjects
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value,
+                            style: const TextStyle(color: Colors.white),),
+                        );
+                      }).toList(),
+                      decoration: const InputDecoration(labelText: 'Subject',labelStyle: TextStyle(color: Colors.white)),
+                      dropdownColor: background,
+                    ),
+                    TextField(
+                      controller: dateController,
+                      decoration: const InputDecoration(
+                        labelText: 'Date',
+                        hintText: 'Enter date',
+                        labelStyle: const TextStyle(color: Colors.white), // Set label text color to white
+                        hintStyle: const TextStyle(color: Colors.white), // Set hint text color to white
+                        prefixIcon: const Icon(Icons.calendar_today, color: Colors.white),
+                      ),
+                      style: const TextStyle(color: Colors.white),
+                      onTap: () async {
+                        FocusScope.of(context).requestFocus(FocusNode());
+                        DateTime? picked = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2020),
+                          lastDate: DateTime(2025),
+                        );
+                        if (picked != null) {
+                          setState(() {
+                            selectedDate = picked;
+                            dateController.text =
+                                DateFormat('yyyy-MM-dd').format(picked);
+                          });
+                        }
+                      },
+                    ),
+                  ],
+
+                ),
+
+              ),
+
+              const SizedBox(height: 20),
+              Center( // Center the button
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (!isAdvertising) {
+                      // Button pressed and advertising is not active
+                      setState(() {
+                        isAdvertising = true;
+                      });
+                      startAdvertising();
+                    } else {
+                      // Button pressed and advertising is active
+                      setState(() {
+                        isAdvertising = false;
+                      });
+                      stopAdvertising();
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isAdvertising ? Colors.red : accent, // Change the background color based on isAdvertising
+                    minimumSize: const Size(200, 50), // Set minimum width and height
+                  ),
+                  child: Text(
+                    isAdvertising ? 'Stop Attendance' : 'Take Attendance', // Change text based on isAdvertising
+                    style: const TextStyle(color: Colors.white), // Set text color to white
+                  ),
+                ),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: isAdvertising ? stopAdvertising : startAdvertising,
+              Center(
+              child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: isAdvertising ? Colors.red : Colors.blue,
+                  backgroundColor: accent, // Set the background color of the Student List button
+                  minimumSize: const Size(200, 50), // Set minimum width and height
                 ),
-                child: Text(isAdvertising ? 'Stop Attendance' : 'Take Attendance'),
+                onPressed: () {  },
+                child: const Text(
+                  'Student List',
+                  style: TextStyle(color: Colors.white), // Set text color to white
+                ),
               ),
-              const SizedBox(height: 20),
+              ),
             ],
           ),
         ),
-      ),
+    ),
     );
   }
 
