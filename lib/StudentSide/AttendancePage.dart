@@ -172,7 +172,7 @@ class _UserDetailsViewState extends State<UserDetailsView> {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text("Attendance recorded!! :)")),
             );
-            widget.service.markAttendance(widget.student);
+            widget.service.markAttendance(widget.student, widget.Subject_id);
             setState(() {
               flag = 2;
             });

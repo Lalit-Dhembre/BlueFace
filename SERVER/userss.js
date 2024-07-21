@@ -104,19 +104,33 @@ router.post('/loginstudent', async (req, res) => {
 
 // Route to handle attendance recording
 router.post('/takeAttendance', async (req, res) => {
-  const {division, semester, branch, PRN, date } = req.body;
+  const { division, semester, branch, PRN, Subject_id, Batch } = req.body;
 
-  const query = 'INSERT INTO tempattendance (PRN,branch,semester,division,batch) VALUES (?, ?, ?, ?, ?)';
-  const values = [semester, branch, PRN, date, sem_id];
-
+  const queryFetchSemId = 'SELECT SEM_ID FROM sem_info WHERE SEMESTER = ? AND BRANCH = ? AND DIVISION = ? AND SUB_ID = ? AND BATCH = ?';
+  const insertAttendance = 'INSERT INTO tempattendance (SEM_ID, PRN) VALUES (?, ?)';
+  console.log(req.body);
   try {
-    await db.queryAsync(query, values);
-    res.status(200).send('Attendance recorded successfully');
+    // Fetch SEM_ID from sem_info table
+    const [rows] = await db.queryAsync(queryFetchSemId, [semester, branch, division, Subject_id, Batch]);
+    console.log([rows]);
+    // Check if rows is defined and contains results
+    if (rows && rows.length > 0) {
+      const sem_id = rows[0].SEM_ID;
+      console.log(sem_id);
+      // Insert SEM_ID and PRN into tempattendance table
+      await db.queryAsync(insertAttendance, [sem_id, PRN]);
+
+      res.status(200).send('Attendance recorded successfully');
+    } else {
+      res.status(404).send('SEM_ID not found');
+    }
   } catch (err) {
     console.error('Error inserting data:', err);
     res.status(500).send('Failed to record attendance');
   }
 });
+
+
 
 // Route to handle attendance commit
 router.post('/attendance/commit', async (req, res) => {
