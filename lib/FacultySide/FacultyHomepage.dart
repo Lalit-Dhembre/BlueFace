@@ -45,11 +45,9 @@ class _FacultyLoggedInState extends State<FacultyLoggedIn> {
       body: Padding(
         padding: const EdgeInsets.all(0),
         child: Container(
-<<<<<<< HEAD
+
           padding: const EdgeInsets.fromLTRB(30,80,30,30),
-=======
           padding: const EdgeInsets.fromLTRB(30,50,30,40),
->>>>>>> 1de4e64cb7764d040e870dab3159947f1c533cfa
           decoration: const BoxDecoration(
             color: background, // Set container color to background
           ),
@@ -91,11 +89,9 @@ class _FacultyLoggedInState extends State<FacultyLoggedIn> {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(value,
-<<<<<<< HEAD
+
                             style: const TextStyle(color: Colors.white),),
-=======
                           style: const TextStyle(color: Colors.white),),
->>>>>>> 1de4e64cb7764d040e870dab3159947f1c533cfa
 
                         );
                       }).toList(),
@@ -116,11 +112,11 @@ class _FacultyLoggedInState extends State<FacultyLoggedIn> {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(value,
-<<<<<<< HEAD
+
                             style: const TextStyle(color: Colors.white),),
-=======
+
                               style: const TextStyle(color: Colors.white),),
->>>>>>> 1de4e64cb7764d040e870dab3159947f1c533cfa
+
                         );
                       }).toList(),
                       decoration: const InputDecoration(labelText: 'Semester',labelStyle: TextStyle(color: Colors.white)),
@@ -246,7 +242,7 @@ class _FacultyLoggedInState extends State<FacultyLoggedIn> {
               ),
               const SizedBox(height: 20),
               Center(
-<<<<<<< HEAD
+
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: accent, // Set the background color of the Student List button
@@ -259,7 +255,7 @@ class _FacultyLoggedInState extends State<FacultyLoggedIn> {
                   ),
                 ),
               ),
-=======
+
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: accent, // Set the background color of the Student List button
@@ -277,7 +273,7 @@ class _FacultyLoggedInState extends State<FacultyLoggedIn> {
                 ),
               ),
               ),
->>>>>>> 1de4e64cb7764d040e870dab3159947f1c533cfa
+
             ],
           ),
         ),
