@@ -9,7 +9,7 @@ import '../Services/FaceAuth/FaceAuthentication/size.dart';
 import '../Services/FaceAuth/FaceRegister/RegisterFaceView.dart';
 
 // Define a constant for the background color
-const Color background = Color(0xFFE6DCFF); // Replace with your desired color
+const Color background = Color(0xff48426d); // Replace with your desired color
 
 class StudentLoggedIn extends StatefulWidget {
   final StudentLogin student;
@@ -46,7 +46,7 @@ class _StudentLoggedInState extends State<StudentLoggedIn> {
       appBar: AppBar(
         title: Text(
           'Hello ${widget.student.name} !',
-          style: TextStyle(color: Colors.white), // Ensure text is readable
+          style: TextStyle(color: ), // Ensure text is readable
         ),
         backgroundColor: Colors.transparent, // Make AppBar transparent
         elevation: 0, // Remove shadow

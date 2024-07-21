@@ -12,7 +12,7 @@ import '../StudentSide/StudentHomepage.dart';
 
 
 class Services {
-  final String url1 = "http://192.168.133.38:4000";
+  final String url1 = "http://192.168.0.107:4000";
 
   Future<bool> loginStudent(BuildContext context, String email, String password) async {
     var url = Uri.parse(url1 + '/userss/loginstudent'); // Replace with your server URL
