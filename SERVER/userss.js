@@ -188,7 +188,16 @@ await db.queryAsync(updateQuery, [student.status, student.PRN]);
 
 // Route to get students based on semester and branch
 router.get('/studentlist', async (req, res) => {
-  const { semester, branch, division, batch } = req.query;
+  const { semester, branch, division, batch, faculty_id } = req.query;
+  console.log('Query Parameters:', req.query); // Log the received parameters
+
+  if (!semester || !branch || !division || !batch || !faculty_id) {
+    console.log('Missing query parameters:', req.query);
+    return res.status(400).json({
+      success: false,
+      message: 'Missing query parameters',
+    });
+  }
 
   // Define the SQL queries
   const queryFetchSemId = `
@@ -198,7 +207,19 @@ router.get('/studentlist', async (req, res) => {
       AND BRANCH = ? 
       AND DIVISION = ? 
       AND BATCH = ?
-  `;
+      AND FACULTY_ID = ?`;
+
+  const queryFetchStudentInfo = batch === 'ALL'
+    ? `
+      SELECT PRN, Name 
+      FROM student_info 
+      WHERE BRANCH = ? AND DIVISION = ? AND SEMESTER = ?
+    `
+    : `
+      SELECT PRN, Name 
+      FROM student_info 
+      WHERE BRANCH = ? AND DIVISION = ? AND BATCH = ? AND SEMESTER = ?
+    `;
 
   const queryFetchPrns = `
     SELECT PRN 
@@ -206,49 +227,58 @@ router.get('/studentlist', async (req, res) => {
     WHERE SEM_ID = ?
   `;
 
-  const queryFetchStudentInfo = `
-    SELECT PRN, Name 
-    FROM student_info 
-    WHERE PRN IN (?)
-  `;
-
   try {
+    // Fetch student details from student_info table
+    const studentInfoRows = await db.queryAsync(queryFetchStudentInfo, 
+      batch === 'ALL' 
+        ? [branch, division, semester] 
+        : [branch, division, batch, semester]
+    );
+    console.log('Student Info Rows:', JSON.stringify(studentInfoRows));
+
+    if (studentInfoRows.length === 0) {
+      console.log('No students found for the given parameters:', { branch, division, batch, semester });
+      return res.status(404).json({
+        success: false,
+        message: 'No students found for the given parameters',
+      });
+    }
+
+    // Extract PRNs from studentInfoRows
+    const prns = studentInfoRows.map(student => student.PRN);
+    console.log('Extracted PRNs from student info:', prns);
+
     // Fetch SEM_ID from sem_info table
-    const [semIdRows] = await db.queryAsync(queryFetchSemId, [semester, branch, division, batch]);
+    const semIdRows = await db.queryAsync(queryFetchSemId, [semester, branch, division, batch, faculty_id]);
+    console.log('SEM ID ROWS:', JSON.stringify(semIdRows));
 
     if (semIdRows.length > 0) {
       const semId = semIdRows[0].SEM_ID;
+      console.log('SEM ID:', semId);
 
       // Fetch PRNs from tempattendance table
-      const [prnRows] = await db.queryAsync(queryFetchPrns, [semId]);
+      const prnRows = await db.queryAsync(queryFetchPrns, [semId]);
+      console.log('PRN ROWS:', JSON.stringify(prnRows));
 
-      if (prnRows.length > 0) {
-        // Extract PRNs
-        const prns = prnRows.map(row => row.PRN);
+      // Extract PRNs from tempattendance
+      const presentPrns = prnRows.map(row => row.PRN);
+      console.log('Extracted PRNs from tempattendance:', presentPrns);
 
-        // Fetch student details from student_info table
-        const [studentInfoRows] = await db.queryAsync(queryFetchStudentInfo, [prns]);
+      // Process student data to include isPresent field
+      const studentList = studentInfoRows.map(student => {
+        return {
+          PRN: student.PRN,
+          Name: student.Name,
+          isPresent: presentPrns.includes(student.PRN) // Check if PRN is in tempattendance
+        };
+      });
 
-        // Process student data to include isPresent field
-        const studentList = studentInfoRows.map(student => {
-          return {
-            PRN: student.PRN,
-            Name: student.Name,
-            isPresent: prns.includes(student.PRN) // Check if PRN is in tempattendance
-          };
-        });
-
-        res.status(200).json({
-          success: true,
-          students: studentList,
-        });
-      } else {
-        res.status(404).json({
-          success: false,
-          message: 'No PRNs found for the given SEM_ID',
-        });
-      }
+      res.status(200).json({
+        success: true,
+        students: studentList,
+      });
     } else {
+      console.log('No SEM_ID found for the given parameters:', { semester, branch, division, batch, faculty_id });
       res.status(404).json({
         success: false,
         message: 'No SEM_ID found for the given parameters',
@@ -259,4 +289,7 @@ router.get('/studentlist', async (req, res) => {
     res.status(500).send('Error fetching student list');
   }
 });
+
+
 module.exports = router;
+

@@ -8,15 +8,16 @@ class StudentList extends StatefulWidget {
   final String? division;
   final String? batch;
   final String? branch;
+  final String? faculty_id;
 
-  const StudentList({super.key, this.semester, this.division, this.batch, this.branch});
+  const StudentList({super.key, this.semester, this.division, this.batch, this.branch, this.faculty_id});
+
   @override
   StudentListState createState() => StudentListState();
 }
 
 class StudentListState extends State<StudentList> {
-  List<StudentLogin> studentsList = [];
-  List<ConnectedStudent> connectedStudents = [];
+  List<StudentsLists> studentsList = [];
   var service = Services();
 
   @override
@@ -26,12 +27,11 @@ class StudentListState extends State<StudentList> {
   }
 
   void fetchInitialData() async {
-    await service.fetchStudents(studentsList);
-    await service.fetchConnectedStudents(connectedStudents);
+    await service.studentslist(studentsList, widget.semester, widget.branch, widget.batch, widget.division, widget.faculty_id);
     setState(() {});
   }
 
-  void _showStatusDialog(StudentLogin student) {
+  void _showStatusDialog(StudentsLists student) {
     showDialog(
       context: CustomSnackBar.context,
       builder: (BuildContext context) {
@@ -51,8 +51,9 @@ class StudentListState extends State<StudentList> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      student.isPresent = true;
-                      updateStudentStatus(student);
+                      setState(() {
+                        student.isPresent = true;
+                      });
                       Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(
@@ -62,8 +63,9 @@ class StudentListState extends State<StudentList> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      student.isPresent = false;
-                      updateStudentStatus(student);
+                      setState(() {
+                        student.isPresent = false;
+                      });
                       Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(
@@ -78,24 +80,6 @@ class StudentListState extends State<StudentList> {
         );
       },
     );
-  }
-
-  void updateStudentStatus(StudentLogin student) {
-    final index = connectedStudents.indexWhere((connectedStudent) => connectedStudent.PRN == student.PRN);
-
-    if (student.isPresent && index == -1) {
-      connectedStudents.add(ConnectedStudent(
-        studentName: student.name,
-        semester1: student.Semester,
-        branch: student.Branch,
-        PRN: student.PRN,
-        datetime: DateTime.now(),
-      ));
-    } else if (!student.isPresent && index != -1) {
-      connectedStudents.removeAt(index);
-    }
-
-    setState(() {});
   }
 
   Future<void> _showCommitDialog() async {
@@ -115,7 +99,7 @@ class StudentListState extends State<StudentList> {
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
-                  await service.commitAttendance(studentsList, 'branch', 'semester', 'subject', formattedDateTime);
+                  // await service.commitAttendance(studentsList, widget.branch, widget.semester, 'subject', formattedDateTime);
                   Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
@@ -154,13 +138,6 @@ class StudentListState extends State<StudentList> {
         child: ListView.builder(
           itemCount: studentsList.length,
           itemBuilder: (BuildContext context, int index) {
-            bool isConnected = connectedStudents.any((connected) =>
-            connected.PRN == studentsList[index].PRN &&
-                connected.branch == studentsList[index].Branch &&
-                connected.semester1 == studentsList[index].Semester.toString());
-
-            studentsList[index].isPresent = isConnected;
-
             return ListTile(
               title: Text("Name: ${studentsList[index].name ?? 'Unknown'}"),
               subtitle: Text("PRN: ${studentsList[index].PRN ?? 'Unknown'}"),

@@ -11,7 +11,7 @@ import '../StudentSide/StudentHomepage.dart';
 
 
 class Services {
-  final String url1 = "http://192.168.0.107:4000";
+  final String url1 = "http://192.168.1.9:4000";
 
   Future<bool> loginStudent(BuildContext context, String email, String password) async {
     var url = Uri.parse(url1 + '/userss/loginstudent'); // Replace with your server URL
@@ -160,6 +160,35 @@ class Services {
       // Handle error
     }
   }
+  Future<void> studentslist(List<StudentsLists> studentsList, String? semester, String? branch, String? batch, String? division, String? faculty_id) async {
+    String url = "$url1/userss/studentlist?semester=$semester&branch=$branch&batch=$batch&division=$division&faculty_id=$faculty_id";
+    print('Request URL: $url'); // Log the URL
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        if (data['success']) {
+          studentsList.clear();
+          for (var student in data['students']) {
+            studentsList.add(StudentsLists(
+              PRN: student['PRN'],
+              name: student['Name'],
+              isPresent: student['isPresent'],
+            ));
+          }
+        } else {
+          throw Exception('No students found');
+        }
+      } else {
+        throw Exception('Failed to load students data, status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching students data: $e');
+      throw Exception('Failed to fetch students data');
+    }
+  }
+
+
 
   Future<void> fetchStudents(List<StudentLogin> studentsList) async {
     try {

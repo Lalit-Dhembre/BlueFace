@@ -175,26 +175,11 @@ class Points {
   Map<String, dynamic> toJson() => {'x': x, 'y': y};
 }
 
-class StudentList {
-  final String semester;
-  final String branch;
-  final String batch;
-  final String subject;
-  final String division;
+class StudentsLists{
+  final String? PRN;
   final String? name;
-  final String? prn;
-  bool isPresent;
-
-  StudentList({
-    required this.semester,
-    required this.branch,
-    required this.batch,
-    required this.subject,
-    required this.division,
-    this.name,
-    this.prn,
-    this.isPresent = false,
-  });
+  bool isPresent = false;
+  StudentsLists({required this.PRN,required this.name, required this.isPresent});
 }
 
 class ConnectedStudent {

@@ -2,7 +2,6 @@ import 'package:BlueFace/FacultySide/StudentList.dart' as stud;
 import 'package:BlueFace/Model.dart';
 import 'package:BlueFace/Services/FaceAuth/FaceAuthentication/themes.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:nearby_connections/nearby_connections.dart';
@@ -34,20 +33,19 @@ class _FacultyLoggedInState extends State<FacultyLoggedIn> {
 
   TextEditingController dateController = TextEditingController();
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Hello ${widget.faculty.Faculty_id} !!'),
         titleTextStyle: const TextStyle(color: accent),
         backgroundColor: accentOver,
-        iconTheme: const IconThemeData(color: accent),// Change AppBar color to accentOver
+        iconTheme: const IconThemeData(color: accent), // Change AppBar color to accentOver
       ),
       body: Padding(
         padding: const EdgeInsets.all(0),
         child: Container(
-
-          padding: const EdgeInsets.fromLTRB(30,80,30,30),
-          padding: const EdgeInsets.fromLTRB(30,50,30,40),
+          padding: const EdgeInsets.fromLTRB(30, 50, 30, 40),
           decoration: const BoxDecoration(
             color: background, // Set container color to background
           ),
@@ -55,7 +53,6 @@ class _FacultyLoggedInState extends State<FacultyLoggedIn> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Wrap Dropdowns in a Container with yellow background
               Container(
                 decoration: BoxDecoration(
                   color: accentOver, // Set background color to yellow
@@ -64,43 +61,29 @@ class _FacultyLoggedInState extends State<FacultyLoggedIn> {
                 ),
                 padding: const EdgeInsets.all(30), // Padding inside the container
                 child: Column(
-
                   children: [
                     DropdownButtonFormField<String>(
-                      padding: EdgeInsets.fromLTRB(0,0,0,30),
-
                       value: selectedBranch,
-
                       onChanged: (newValue) {
                         setState(() {
                           selectedBranch = newValue;
                         });
                       },
                       items: <String>[
-                        'ECS',
-                        'EXTC',
-                        'CE',
-                        'IT',
-                        'AIDS',
-                        'AIML',
-                        'IOT',
-                        'MECHANICAL'
+                        'ECS', 'EXTC', 'CE', 'IT', 'AIDS', 'AIML', 'IOT', 'MECHANICAL'
                       ].map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
-                          child: Text(value,
-
-                            style: const TextStyle(color: Colors.white),),
-                          style: const TextStyle(color: Colors.white),),
-
+                          child: Text(value, style: const TextStyle(color: Colors.white)),
                         );
                       }).toList(),
-                      decoration: const InputDecoration(labelText: 'Branch', labelStyle: TextStyle(color: Colors.white)),
+                      decoration: const InputDecoration(
+                        labelText: 'Branch',
+                        labelStyle: TextStyle(color: Colors.white),
+                      ),
                       dropdownColor: background,
-
                     ),
                     DropdownButtonFormField<String>(
-                      padding: EdgeInsets.fromLTRB(0,0,0,30),
                       value: selectedSemester,
                       onChanged: (newValue) {
                         setState(() {
@@ -111,19 +94,16 @@ class _FacultyLoggedInState extends State<FacultyLoggedIn> {
                           .map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
-                          child: Text(value,
-
-                            style: const TextStyle(color: Colors.white),),
-
-                              style: const TextStyle(color: Colors.white),),
-
+                          child: Text(value, style: const TextStyle(color: Colors.white)),
                         );
                       }).toList(),
-                      decoration: const InputDecoration(labelText: 'Semester',labelStyle: TextStyle(color: Colors.white)),
+                      decoration: const InputDecoration(
+                        labelText: 'Semester',
+                        labelStyle: TextStyle(color: Colors.white),
+                      ),
                       dropdownColor: background,
                     ),
                     DropdownButtonFormField<String>(
-                      padding: EdgeInsets.fromLTRB(0,0,0,30),
                       value: selectedDivision,
                       onChanged: (newValue) {
                         setState(() {
@@ -134,15 +114,16 @@ class _FacultyLoggedInState extends State<FacultyLoggedIn> {
                           .map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
-                          child: Text(value,
-                            style: const TextStyle(color: Colors.white),),
+                          child: Text(value, style: const TextStyle(color: Colors.white)),
                         );
                       }).toList(),
-                      decoration: const InputDecoration(labelText: 'Division',labelStyle: TextStyle(color: Colors.white)),
+                      decoration: const InputDecoration(
+                        labelText: 'Division',
+                        labelStyle: TextStyle(color: Colors.white),
+                      ),
                       dropdownColor: background,
                     ),
                     DropdownButtonFormField<String>(
-                      padding: EdgeInsets.fromLTRB(0,0,0,30),
                       value: selectedBatch,
                       onChanged: (newValue) {
                         setState(() {
@@ -153,30 +134,32 @@ class _FacultyLoggedInState extends State<FacultyLoggedIn> {
                           .map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
-                          child: Text(value,
-                            style: const TextStyle(color: Colors.white),),
+                          child: Text(value, style: const TextStyle(color: Colors.white)),
                         );
                       }).toList(),
-                      decoration: const InputDecoration(labelText: 'Batch',labelStyle: TextStyle(color: Colors.white)),
+                      decoration: const InputDecoration(
+                        labelText: 'Batch',
+                        labelStyle: TextStyle(color: Colors.white),
+                      ),
                       dropdownColor: background,
                     ),
                     DropdownButtonFormField<String>(
-                      padding: EdgeInsets.fromLTRB(0,0,0,30),
                       value: selectedSubject,
                       onChanged: (newValue) {
                         setState(() {
                           selectedSubject = newValue;
                         });
                       },
-                      items: widget.faculty.Subjects
-                          .map<DropdownMenuItem<String>>((String value) {
+                      items: widget.faculty.Subjects.map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
-                          child: Text(value,
-                            style: const TextStyle(color: Colors.white),),
+                          child: Text(value, style: const TextStyle(color: Colors.white)),
                         );
                       }).toList(),
-                      decoration: const InputDecoration(labelText: 'Subject',labelStyle: TextStyle(color: Colors.white)),
+                      decoration: const InputDecoration(
+                        labelText: 'Subject',
+                        labelStyle: TextStyle(color: Colors.white),
+                      ),
                       dropdownColor: background,
                     ),
                     TextField(
@@ -184,9 +167,9 @@ class _FacultyLoggedInState extends State<FacultyLoggedIn> {
                       decoration: const InputDecoration(
                         labelText: 'Date',
                         hintText: 'Enter date',
-                        labelStyle: const TextStyle(color: Colors.white), // Set label text color to white
-                        hintStyle: const TextStyle(color: Colors.white), // Set hint text color to white
-                        prefixIcon: const Icon(Icons.calendar_today, color: Colors.white),
+                        labelStyle: TextStyle(color: Colors.white), // Set label text color to white
+                        hintStyle: TextStyle(color: Colors.white), // Set hint text color to white
+                        prefixIcon: Icon(Icons.calendar_today, color: Colors.white),
                       ),
                       style: const TextStyle(color: Colors.white),
                       onTap: () async {
@@ -200,20 +183,16 @@ class _FacultyLoggedInState extends State<FacultyLoggedIn> {
                         if (picked != null) {
                           setState(() {
                             selectedDate = picked;
-                            dateController.text =
-                                DateFormat('yyyy-MM-dd').format(picked);
+                            dateController.text = DateFormat('yyyy-MM-dd').format(picked);
                           });
                         }
                       },
                     ),
                   ],
-
                 ),
-
               ),
-
               const SizedBox(height: 20),
-              Center( // Center the button
+              Center(
                 child: ElevatedButton(
                   onPressed: () {
                     if (!isAdvertising) {
@@ -242,42 +221,35 @@ class _FacultyLoggedInState extends State<FacultyLoggedIn> {
               ),
               const SizedBox(height: 20),
               Center(
-
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: accent, // Set the background color of the Student List button
                     minimumSize: const Size(200, 50), // Set minimum width and height
                   ),
-                  onPressed: () {  },
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => stud.StudentList(
+                          semester: selectedSemester,
+                          division: selectedDivision,
+                          batch: selectedBatch,
+                          branch: selectedBranch,
+                          faculty_id: widget.faculty.Faculty_id,
+                        ),
+                      ),
+                    );
+                  },
                   child: const Text(
                     'Student List',
                     style: TextStyle(color: Colors.white), // Set text color to white
                   ),
                 ),
               ),
-
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: accent, // Set the background color of the Student List button
-                  minimumSize: const Size(200, 50), // Set minimum width and height
-                ),
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) =>stud.StudentList()),
-                  );
-                },
-                child: const Text(
-                  'Student List',
-                  style: TextStyle(color: Colors.white), // Set text color to white
-                ),
-              ),
-              ),
-
             ],
           ),
         ),
-    ),
+      ),
     );
   }
 
@@ -304,76 +276,53 @@ class _FacultyLoggedInState extends State<FacultyLoggedIn> {
       return;
     }
 
-    await Permission.nearbyWifiDevices.request();
-    Nearby().askBluetoothPermission();
-
-    while (!await Permission.bluetooth.isGranted ||
-        !await Permission.bluetoothAdvertise.isGranted ||
-        !await Permission.bluetoothConnect.isGranted ||
-        !await Permission.bluetoothScan.isGranted) {
-      [
-        Permission.bluetooth,
-        Permission.bluetoothAdvertise,
-        Permission.bluetoothConnect,
-        Permission.bluetoothScan,
-      ].request();
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      status = await Permission.storage.request();
+      if (!status.isGranted) {
+        showSnackbar("External Storage permissions not granted :(");
+        resetState();
+        return;
+      }
     }
 
     try {
-      bool advertisingStarted = await Nearby().startAdvertising(
-        "SIES ${selectedSemester} ${selectedBranch}",
+      await Nearby().startAdvertising(
+        widget.faculty.Faculty_id,
         strategy,
-        onConnectionInitiated: (id, info) {
-          onConnectionInit(id, info);
-        },
+        onConnectionInitiated: onConnectionInit,
         onConnectionResult: (id, status) {
-          if (status == Status.CONNECTED) {
-            showSnackbar("Connection established!");
-          } else {
-            showSnackbar("Connection failed!");
-          }
+          showSnackbar(status as String);
         },
         onDisconnected: (id) {
-          showSnackbar("Disconnected");
+          showSnackbar("Disconnected: $id");
         },
       );
-      if (advertisingStarted) {
-        setState(() {
-          isAdvertising = true;
-        });
-      } else {
-        resetState();
-        showSnackbar("Advertising failed to start.");
-      }
-    } catch (e) {
-      print("Error during advertising: $e");
+    } catch (exception) {
+      showSnackbar("Exception occurred: $exception");
       resetState();
-      showSnackbar("Error: $e");
-    }
-  }
-
-  Future<void> stopAdvertising() async {
-    try {
-      await Nearby().stopAdvertising();
-      showSnackbar("Stopped Advertising");
-      setState(() {
-        isAdvertising = false;
-      });
-    } catch (e) {
-      showSnackbar("Error stopping advertising: $e");
-    } finally {
-      setState(() {
-        isTakeAttendancePressed = false;
-      });
     }
   }
 
   void onConnectionInit(String id, ConnectionInfo info) {
-    Nearby().acceptConnection(id, onPayLoadRecieved: (endid, payload) {
-      if (payload.bytes != null) {
-        showSnackbar("Payload received from ${info.endpointName}");
-      }
-    });
+    Nearby().acceptConnection(
+      id,
+      onPayLoadRecieved: (endid, payload) {
+        if (payload.bytes != null) {
+          showSnackbar("Data received from $endid");
+        }
+      },
+      onPayloadTransferUpdate: (endid, payloadTransferUpdate) {
+        if (payloadTransferUpdate.status == PayloadStatus.SUCCESS) {
+          showSnackbar("Transfer successful from $endid");
+        }
+      },
+    );
+  }
+
+  void stopAdvertising() {
+    Nearby().stopAdvertising();
+    showSnackbar("Stopped advertising");
   }
 
   void showSnackbar(String message) {
@@ -387,59 +336,5 @@ class _FacultyLoggedInState extends State<FacultyLoggedIn> {
       isTakeAttendancePressed = false;
       isAdvertising = false;
     });
-  }
-
-  @override
-  void dispose() {
-    Nearby().stopAdvertising();
-    super.dispose();
-  }
-}
-
-class FacultyLoggedInWeb extends StatelessWidget {
-  final FacultyLogin faculty;
-
-  const FacultyLoggedInWeb({Key? key, required this.faculty}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Hello ${faculty.Faculty_id} !!'),
-      ),
-      body: Center(
-        child: Text('Nearby Connections not supported on web'),
-      ),
-    );
-  }
-}
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'BlueFace Attendance',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: HomePage(),
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  final FacultyLogin faculty = FacultyLogin(Faculty_id: '123', Subjects: ['Math', 'Science']);
-
-  @override
-  Widget build(BuildContext context) {
-    if (kIsWeb) {
-      return FacultyLoggedInWeb(faculty: faculty);
-    } else {
-      return FacultyLoggedIn(faculty: faculty);
-    }
   }
 }
