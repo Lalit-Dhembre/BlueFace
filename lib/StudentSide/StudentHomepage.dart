@@ -68,9 +68,10 @@ class _StudentLoggedInState extends State<StudentLoggedIn> {
       appBar: AppBar(
         title: Text(
           'Hello ${widget.student.name} !',
-          style: TextStyle(color: accent), // Ensure text is readable
+          style: TextStyle(color: Colors.white), // Ensure text is readable
         ),
-        backgroundColor: accentOver, // Make AppBar transparent
+        backgroundColor: accentOver,
+        foregroundColor: Colors.white,// Make AppBar transparent
         elevation: 0,
         iconTheme: const IconThemeData(color: accent),// Remove shadow
         shape: RoundedRectangleBorder(

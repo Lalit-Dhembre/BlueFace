@@ -41,21 +41,24 @@ class _UserDetailsViewState extends State<UserDetailsView> {
         appBar: AppBar(
           title: const Text("Student HomePage", style: TextStyle(color: Colors.white)),
           backgroundColor: background,
-          actions: [
-            CircleAvatar(
-              radius: 20,
-              backgroundColor: Colors.white,
-              child: GestureDetector(
-                onTap: () async {
-                  await Nearby().stopDiscovery();
-                  Get.offNamed('/login');
-                },
-                child: const Icon(Icons.logout_sharp, color: accent),
-              ),
-            )
-          ],
+          foregroundColor: Colors.white,
+          // actions: [
+          //   CircleAvatar(
+          //     radius: 20,
+          //     backgroundColor: Colors.white,
+          //     child: GestureDetector(
+          //       onTap: () async {
+          //         await Nearby().stopDiscovery();
+          //         Get.offNamed('/login');
+          //       },
+          //       child: const Icon(Icons.logout_sharp, color: accent),
+          //     ),
+          //   )
+          // ],
         ),
-        body: Center(
+        body: Container(
+          color: background,
+        child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -74,7 +77,7 @@ class _UserDetailsViewState extends State<UserDetailsView> {
                             color: accent,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.white.withOpacity(0.5),
+                                color: accentOver.withOpacity(0.5),
                                 spreadRadius: 5,
                                 blurRadius: 7,
                                 offset: const Offset(0, 3),
@@ -87,7 +90,9 @@ class _UserDetailsViewState extends State<UserDetailsView> {
                         ),
                         const Text(
                           "Tap to mark attendance",
-                          style: TextStyle(color: Colors.black, fontSize: 20),
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+
+
                         )
                       ],
                     ),
@@ -121,6 +126,7 @@ class _UserDetailsViewState extends State<UserDetailsView> {
             ],
           ),
         ),
+      ),
       ),
     );
   }
