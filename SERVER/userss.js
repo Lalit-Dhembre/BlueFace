@@ -302,9 +302,12 @@ const query = (sql, values) => {
 
 router.post('/commit', async (req, res) => {
   const { semester, division, batch, branch, faculty_id, prns } = req.body;
-  console.log(req.body);
+  console.log("REQUEST: ", req.body);
   const moment = require('moment');
-  const now = moment().format('YYYY:MM:DD');
+  const now = moment().format('YYYY-MM-DD');
+
+  // Ensure prns is an array, and convert it to a comma-separated string
+  const prnsString = Array.isArray(prns) ? prns.join(',') : prns;
 
   const queryFetchSemId = `
     SELECT SEM_ID 
@@ -322,14 +325,14 @@ router.post('/commit', async (req, res) => {
   try {
     // Fetch SEM_ID
     const semIdResults = await query(queryFetchSemId, [semester, branch, division, batch, faculty_id]);
-    console.log(semIdResults)
+    console.log(semIdResults);
     if (semIdResults.length === 0) {
       return res.status(404).send('SEM_ID not found');
     }
     const semId = semIdResults[0].SEM_ID;
 
-    // Insert into COMMITATTENDANCE
-    await query(insertAttendance, [semId, prns, now]);
+    // Insert into COMMITATTENDANCE with comma-separated PRNs
+    await query(insertAttendance, [semId, prnsString, now]);
 
     // Truncate tempattendance
     await query(truncateTemp, [semId]);

@@ -1,3 +1,4 @@
+import 'package:BlueFace/Services/FaceAuth/FaceAuthentication/themes.dart';
 import 'package:flutter/material.dart';
 import '../Model.dart';
 import '../Services/services.dart';
@@ -10,7 +11,14 @@ class StudentList extends StatefulWidget {
   final String? branch;
   final String? faculty_id;
 
-  const StudentList({super.key, this.semester, this.division, this.batch, this.branch, this.faculty_id});
+  const StudentList({
+    super.key,
+    this.semester,
+    this.division,
+    this.batch,
+    this.branch,
+    this.faculty_id,
+  });
 
   @override
   StudentListState createState() => StudentListState();
@@ -27,7 +35,14 @@ class StudentListState extends State<StudentList> {
   }
 
   void fetchInitialData() async {
-    await service.studentslist(studentsList, widget.semester, widget.branch, widget.batch, widget.division, widget.faculty_id);
+    await service.studentslist(
+      studentsList,
+      widget.semester,
+      widget.branch,
+      widget.batch,
+      widget.division,
+      widget.faculty_id,
+    );
     setState(() {});
   }
 
@@ -57,7 +72,7 @@ class StudentListState extends State<StudentList> {
                       Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
+                      backgroundColor: accent,
                     ),
                     child: Text('Present'),
                   ),
@@ -87,7 +102,7 @@ class StudentListState extends State<StudentList> {
     String formattedDateTime = '${now.year}-${now.month}-${now.day}';
 
     return showDialog(
-      context: CustomSnackBar.context,
+      context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Commit Attendance"),
@@ -97,24 +112,34 @@ class StudentListState extends State<StudentList> {
             children: [
               Text("Are you sure you want to commit attendance?"),
               SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  // await service.commitAttendance(studentsList, widget.branch, widget.semester, 'subject', formattedDateTime);
-                  Navigator.of(context).pop();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                ),
-                child: Text('Commit'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                ),
-                child: Text('Cancel'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      List<String?> prns = _getPresentPrns();
+                      // Commit attendance logic here
+                      await service.commitAttendance(widget.semester, widget.division, widget.batch, widget.branch, widget.faculty_id, prns);
+                      Navigator.of(context).pop(); // Close the dialog
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: Text('Commit'),
+                  ),
+                  SizedBox(width: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Close the dialog
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: Text('Cancel'),
+                  ),
+                ],
               ),
             ],
           ),
@@ -127,32 +152,62 @@ class StudentListState extends State<StudentList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Student List'),
+        title: Text(
+          'Student List',
+          style: TextStyle(color: Colors.white), // Text color white
+        ),
+        backgroundColor: background,
+        foregroundColor: Colors.white, // Ensure text color is white
       ),
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.white54, Colors.white70],
-          ),
+          color: background,
         ),
         child: ListView.builder(
           itemCount: studentsList.length,
           itemBuilder: (BuildContext context, int index) {
-            return ListTile(
-              title: Text("Name: ${studentsList[index].name ?? 'Unknown'}"),
-              subtitle: Text("PRN: ${studentsList[index].PRN ?? 'Unknown'}"),
-              trailing: studentsList[index].isPresent
-                  ? Chip(
-                backgroundColor: Colors.green,
-                label: Text('Present'),
-              )
-                  : Chip(
-                backgroundColor: Colors.red,
-                label: Text('Absent'),
+            return Container(
+              margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              padding: EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: accentOver, // Background color for each student box
+                borderRadius: BorderRadius.circular(8.0),
               ),
-              onLongPress: () {
-                _showStatusDialog(studentsList[index]);
-              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Name: ${studentsList[index].name ?? 'Unknown'}",
+                          style: TextStyle(color: Colors.white), // Text color white
+                        ),
+                        Text(
+                          "PRN: ${studentsList[index].PRN ?? 'Unknown'}",
+                          style: TextStyle(color: Colors.white), // Text color white
+                        ),
+                      ],
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        studentsList[index].isPresent =
+                        !studentsList[index].isPresent; // Toggle status
+                      });
+                    },
+                    child: Chip(
+                      backgroundColor: studentsList[index].isPresent ? Colors.green : Colors.red,
+                      label: Text(
+                        studentsList[index].isPresent ? 'Present' : 'Absent',
+                        style: TextStyle(color: Colors.white), // Text color white
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             );
           },
         ),
@@ -162,5 +217,11 @@ class StudentListState extends State<StudentList> {
         child: Icon(Icons.check),
       ),
     );
+  }
+  List<String?> _getPresentPrns() {
+    return studentsList
+        .where((student) => student.isPresent)
+        .map((student) => student.PRN)
+        .toList();
   }
 }

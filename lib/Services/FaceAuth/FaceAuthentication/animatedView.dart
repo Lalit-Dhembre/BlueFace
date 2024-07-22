@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:math';
+
 import 'package:BlueFace/Services/FaceAuth/FaceAuthentication/size.dart';
 import 'package:flutter/material.dart';
+
+import 'animatedCircle.dart';
 
 class AnimatedView extends StatefulWidget {
   const AnimatedView({super.key});
@@ -12,31 +15,48 @@ class AnimatedView extends StatefulWidget {
 
 class _AnimatedViewState extends State<AnimatedView>
     with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
-  late Animation<double> animation;
+  late Animation animation;
+  late Animation opacity;
   late AnimationController animationController;
-  late double linePosition; // Position of the line
+  late int sAngle;
+  late int mAngle;
+  late int lAngle;
+  Random random = Random();
+  late Timer timer;
 
   @override
   void initState() {
     super.initState();
+    sAngle = random.nextInt(360);
+    mAngle = random.nextInt(360);
+    lAngle = random.nextInt(360);
+    timer = Timer.periodic(const Duration(seconds: 3), (timer) {
+      sAngle = random.nextInt(360);
+      mAngle = random.nextInt(360);
+      lAngle = random.nextInt(360);
+    });
     animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1200),
-    );
-
-    animation = Tween<double>(begin: 0, end: 1).animate(animationController)
+        vsync: this, duration: const Duration(milliseconds: 1200));
+    opacity = Tween<double>(begin: 0.8, end: 0.0).animate(
+        CurvedAnimation(parent: animationController, curve: Curves.easeIn));
+    animation = Tween<double>(begin: 0, end: 140).animate(CurvedAnimation(
+        parent: animationController, curve: Curves.easeInOutQuad))
       ..addListener(() {
-        setState(() {
-          linePosition = animation.value; // Update line position
-        });
+        setState(() {});
+      })
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed ||
+            status == AnimationStatus.dismissed) {
+          animationController.repeat();
+        }
       });
-
-    animationController.repeat(reverse: true); // Repeat animation
+    animationController.forward();
   }
 
   @override
   void dispose() {
     animationController.dispose();
+    timer.cancel();
     super.dispose();
   }
 
@@ -51,39 +71,16 @@ class _AnimatedViewState extends State<AnimatedView>
       height: 0.3.sh,
       width: 0.66.sw,
       child: CustomPaint(
-        painter: HorizontalLinePainter(linePosition: linePosition),
+        painter: AnimatedCircle(
+            value: animation.value,
+            sAngle: sAngle,
+            mAngle: mAngle,
+            lAngle: lAngle,
+            opacity: opacity.value,
+            showOnxSmallCircle: true,
+            showOnLargeCircle: true,
+            showOnMediumCircle: true),
       ),
     );
-  }
-}
-
-class HorizontalLinePainter extends CustomPainter {
-  final double linePosition;
-
-  HorizontalLinePainter({required this.linePosition});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.red // Change color to red
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 4.0; // Width of the line
-
-    // Fixed length of the line
-    double lineLength = size.width * 1; // 100% of the width
-    // Calculate the vertical position of the line
-    double y = size.height * linePosition; // Animate up and down
-
-    // Draw the horizontal line
-    canvas.drawLine(
-      Offset((size.width - lineLength) / 2, y), // Start point
-      Offset((size.width + lineLength) / 2, y), // End point
-      paint,
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true; // Repaint when linePosition changes
   }
 }

@@ -286,15 +286,15 @@ class Services {
   //   }
   // }
   Future<void> commitAttendance(
-      String semester,
-      String division,
-      String batch,
-      String branch,
-      String facultyId,
-      List<String> prns) async {
+      String? semester,
+      String? division,
+      String? batch,
+      String? branch,
+      String? facultyId,
+      List<String?> prns) async {
     try {
       final response = await http.post(
-        Uri.parse(url1 + "userss/commit"),
+        Uri.parse(url1 + "/userss/commit"),
         headers: {
           'Content-Type': 'application/json',
         },
