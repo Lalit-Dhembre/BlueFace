@@ -289,6 +289,57 @@ router.get('/studentlist', async (req, res) => {
     res.status(500).send('Error fetching student list');
   }
 });
+const query = (sql, values) => {
+  return new Promise((resolve, reject) => {
+    db.query(sql, values, (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(results);
+    });
+  });
+};
+
+router.post('/commit', async (req, res) => {
+  const { semester, division, batch, branch, faculty_id, prns } = req.body;
+  console.log(req.body);
+  const moment = require('moment');
+  const now = moment().format('YYYY:MM:DD');
+
+  const queryFetchSemId = `
+    SELECT SEM_ID 
+    FROM sem_info 
+    WHERE SEMESTER = ? 
+      AND BRANCH = ? 
+      AND DIVISION = ? 
+      AND BATCH = ?
+      AND FACULTY_ID = ?`;
+
+  const insertAttendance = `INSERT INTO COMMITATTENDANCE (SEM_ID, PRN, DATE) VALUES (?, ?, ?)`;
+
+  const truncateTemp = `DELETE FROM tempattendance WHERE SEM_ID = ?`; // Use DELETE instead of TRUNCATE for WHERE clause
+
+  try {
+    // Fetch SEM_ID
+    const semIdResults = await query(queryFetchSemId, [semester, branch, division, batch, faculty_id]);
+    console.log(semIdResults)
+    if (semIdResults.length === 0) {
+      return res.status(404).send('SEM_ID not found');
+    }
+    const semId = semIdResults[0].SEM_ID;
+
+    // Insert into COMMITATTENDANCE
+    await query(insertAttendance, [semId, prns, now]);
+
+    // Truncate tempattendance
+    await query(truncateTemp, [semId]);
+
+    res.status(200).send('Attendance committed successfully');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  }
+});
 
 
 module.exports = router;

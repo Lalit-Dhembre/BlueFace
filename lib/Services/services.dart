@@ -11,7 +11,7 @@ import '../StudentSide/StudentHomepage.dart';
 
 
 class Services {
-  final String url1 = "http://192.168.1.9:4000";
+  final String url1 = "http://192.168.150.38:4000";
 
   Future<bool> loginStudent(BuildContext context, String email, String password) async {
     var url = Uri.parse(url1 + '/userss/loginstudent'); // Replace with your server URL
@@ -252,37 +252,71 @@ class Services {
     }
   }
 
-  Future<void> commitAttendance(List<StudentLogin> studentsList, String branch, String semester, String subject, String localDateTime) async {
-    String tableName = '${branch}_${semester}_${subject}';
-    List<Map<String, dynamic>> attendanceData = studentsList.map((student) {
-      return {
-        'PRN': student.PRN,
-        'status': student.isPresent ? 'Present' : 'Absent',
-      };
-    }).toList();
-
+  // Future<void> commitAttendance(List<StudentLogin> studentsList, String branch, String semester, String subject, String localDateTime) async {
+  //   String tableName = '${branch}_${semester}_${subject}';
+  //   List<Map<String, dynamic>> attendanceData = studentsList.map((student) {
+  //     return {
+  //       'PRN': student.PRN,
+  //       'status': student.isPresent ? 'Present' : 'Absent',
+  //     };
+  //   }).toList();
+  //
+  //   try {
+  //     final res = await http.post(
+  //       Uri.parse('$url1/userss/attendance/commit'),
+  //       headers: {'Content-Type': 'application/json'},
+  //       body: jsonEncode({
+  //         'tableName': tableName,
+  //         'localDateTime': localDateTime,
+  //         'attendanceData': attendanceData,
+  //       }),
+  //     );
+  //
+  //     if (res.statusCode == 200) {
+  //       var data = jsonDecode(res.body);
+  //       if (!data['success']) {
+  //         throw Exception('Failed to commit attendance data');
+  //       }
+  //     } else {
+  //       throw Exception('Failed to commit attendance data, status code: ${res.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     debugPrint('Error committing attendance data: $e');
+  //     throw Exception('Failed to commit attendance data');
+  //   }
+  // }
+  Future<void> commitAttendance(
+      String semester,
+      String division,
+      String batch,
+      String branch,
+      String facultyId,
+      List<String> prns) async {
     try {
-      final res = await http.post(
-        Uri.parse('$url1/userss/attendance/commit'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'tableName': tableName,
-          'localDateTime': localDateTime,
-          'attendanceData': attendanceData,
+      final response = await http.post(
+        Uri.parse(url1 + "userss/commit"),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({
+          'semester': semester,
+          'division': division,
+          'batch': batch,
+          'branch': branch,
+          'faculty_id': facultyId,
+          'prns': prns,
         }),
       );
 
-      if (res.statusCode == 200) {
-        var data = jsonDecode(res.body);
-        if (!data['success']) {
-          throw Exception('Failed to commit attendance data');
-        }
-      } else {
-        throw Exception('Failed to commit attendance data, status code: ${res.statusCode}');
+      if (response.statusCode == 200) {// Successfully committed attendance
+        print('Attendance committed successfully');
+
+      } else {// Failed to commit attendance
+        print('Failed to commit attendance: ${response.body}');
       }
     } catch (e) {
-      debugPrint('Error committing attendance data: $e');
-      throw Exception('Failed to commit attendance data');
+      print('Error: $e');
+
     }
   }
 }

@@ -36,7 +36,6 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
     ScreenSizeUtil.context = context;
   }
 
-  final AudioPlayer _audioPlayer = AudioPlayer();
   final FaceDetector _faceDetector = FaceDetector(
     options: FaceDetectorOptions(
       enableLandmarks: true,
@@ -59,18 +58,8 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
   @override
   void dispose() {
     _faceDetector.close();
-    _audioPlayer.dispose();
     super.dispose();
   }
-
-  get _playScanningAudio => _audioPlayer
-    ..setReleaseMode(ReleaseMode.loop)
-    ..play(AssetSource("scan_beep.wav"));
-
-  get _playFailedAudio => _audioPlayer
-    ..stop()
-    ..setReleaseMode(ReleaseMode.release)
-    ..play(AssetSource("failed.mp3"));
 
   @override
   Widget build(BuildContext context) {
@@ -146,7 +135,6 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
                                 text: "Authenticate",
                                 onTap: () {
                                   setState(() => isMatching = true);
-                                  _playScanningAudio;
                                   _fetchUsersAndMatchFace();
                                 },
                               ),
@@ -276,11 +264,6 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
       });
 
       if (faceMatched) {
-        _audioPlayer
-          ..stop()
-          ..setReleaseMode(ReleaseMode.release)
-          ..play(AssetSource("success.mp3"));
-
         setState(() {
           trialNumber = 1;
           isMatching = false;
@@ -307,7 +290,6 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
           description: "Face doesn't match. Please try again.",
         );
       } else if (trialNumber == 3) {
-        _audioPlayer.stop();
         setState(() {
           isMatching = false;
           trialNumber++;
@@ -346,7 +328,6 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
                     } else {
                       Navigator.of(context).pop();
                       setState(() => isMatching = true);
-                      _playScanningAudio;
                       _fetchUserByName(_nameController.text.trim());
                     }
                   },
@@ -414,7 +395,6 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
 
     setState(() {
       isMatching = false;
-      _playFailedAudio;
     });
   }
 }
