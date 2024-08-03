@@ -90,7 +90,7 @@ class _FacultyLoggedInState extends State<FacultyLoggedIn> {
                           selectedSemester = newValue;
                         });
                       },
-                      items: <String>['1', '2', '3', '4', '5', '6']
+                      items: <String>['1', '2', '3', '4', '5', '6', '7', '8']
                           .map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
@@ -276,19 +276,25 @@ class _FacultyLoggedInState extends State<FacultyLoggedIn> {
       return;
     }
 
-    var status = await Permission.storage.status;
-    if (!status.isGranted) {
-      status = await Permission.storage.request();
-      if (!status.isGranted) {
-        showSnackbar("External Storage permissions not granted :(");
-        resetState();
-        return;
-      }
+    await Permission.nearbyWifiDevices.request();
+    Nearby().askBluetoothPermission();
+
+    while (!await Permission.bluetooth.isGranted ||
+        !await Permission.bluetoothAdvertise.isGranted ||
+        !await Permission.bluetoothConnect.isGranted ||
+        !await Permission.bluetoothScan.isGranted) {
+      [
+        Permission.bluetooth,
+        Permission.bluetoothAdvertise,
+        Permission.bluetoothConnect,
+        Permission.bluetoothScan,
+      ].request();
     }
+
 
     try {
       await Nearby().startAdvertising(
-        widget.faculty.Faculty_id,
+        selectedBranch.toString()+selectedSemester.toString()+selectedDivision.toString()+selectedBatch.toString()+selectedSubject.toString(),
         strategy,
         onConnectionInitiated: onConnectionInit,
         onConnectionResult: (id, status) {

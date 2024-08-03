@@ -105,6 +105,7 @@ class _FacultyLoginPageState extends State<FacultyLoginPage> {
           child: Center(
             child: Padding(
               padding: const EdgeInsets.all(14.0),
+              child:SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -200,6 +201,7 @@ class _FacultyLoginPageState extends State<FacultyLoginPage> {
                       ),
                     ),
                 ],
+              ),
               ),
             ),
           ),
